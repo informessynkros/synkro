@@ -1,0 +1,72 @@
+// Rutas
+
+import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer } from "lucide-react"
+import type { ComponentType } from "react"
+import Dashboard from "../../views/home/Dashboard"
+import Inventory from "../../views/home/Inventory"
+import Campaigns from "../../views/home/Campaigns"
+import CRM from "../../views/home/CRM"
+import CreateInventory from "../../views/home/inventory/CreateInventory"
+
+// Clase de rutas
+export interface RouteConfig {
+  key: string
+  path?: string
+  name: string
+  icon: LucideIcon
+  component?: ComponentType
+  showInSidebar: boolean
+  subItems?: RouteConfig[]
+}
+
+
+export const routesDashboard: RouteConfig[] = [
+  { // Dashboard
+    key: 'dashboard',
+    path: '/',
+    name: 'Dashboard',
+    icon: LayoutDashboard,
+    component: Dashboard,
+    showInSidebar: true,
+  },
+  {
+    key: 'home',
+    name: 'Home',
+    icon: House,
+    showInSidebar: true,
+    subItems: [
+      { // Inventario
+        key: 'inventory',
+        path: '/inventory',
+        name: 'Inventario',
+        icon: Boxes,
+        component: Inventory,
+        showInSidebar: true,
+      },
+      { // Campañas
+        key: 'campaigns',
+        path: '/campaigns',
+        name: 'Campañas',
+        icon: Megaphone,
+        component: Campaigns,
+        showInSidebar: true,
+      },
+      { // CRM
+        key: 'crm',
+        path: '/crm',
+        name: 'CRM',
+        icon: Computer,
+        component: CRM,
+        showInSidebar: true,
+      },
+    ]
+  },
+  { // Vista de inventario
+    key: 'create-inventory',
+    path: '/create-inventory',
+    name: 'Crear almacén',
+    icon: LayoutDashboard,
+    component: CreateInventory,
+    showInSidebar: false,
+  }
+]
