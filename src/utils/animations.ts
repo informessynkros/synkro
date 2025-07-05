@@ -54,3 +54,35 @@ export const inputAnimations = {
   }
 }
 
+// Animaciones para spinners/loading
+export const spinnerAnimations = {
+  // Rotación infinita
+  infiniteRotation: (element: HTMLElement, speed: number = 1) => {
+    return gsap.to(element, {
+      rotation: 360,
+      duration: speed,
+      ease: "none",
+      repeat: -1
+    })
+  },
+
+  // Pulse effect para loading
+  pulse: (element: HTMLElement) => {
+    return gsap.to(element, {
+      scale: 1.1,
+      duration: 1.5,
+      ease: "power2.inOut",
+      repeat: -1
+    })
+  },
+
+  // Fade in/out loading
+  loadingFade: (element: HTMLElement) => {
+    return gsap.to(element, {
+      opacity: 0.3,
+      duration: 1.2,
+      ease: "power2.inOut",
+      repeat: -1
+    })
+  }
+}

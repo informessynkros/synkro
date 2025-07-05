@@ -1,8 +1,10 @@
 // Componente que nos ayuda con los mensajes de errores en los inputs
 import { CircleX, type LucideIcon } from 'lucide-react'
-import InputCustom from '../input/InputCustom'
 import { forwardRef, type InputHTMLAttributes, useRef, useEffect } from 'react'
 import { errorAnimations } from '../../utils/animations'
+import CustomTextarea from '../input/CustomTextarea'
+import CustomPassword from '../input/CustomPassword'
+import CustomInput from '../input/InputCustom'
 
 export interface MessageToastyProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -34,20 +36,15 @@ const MessageToasty = forwardRef<HTMLInputElement, MessageToastyProps>(
       previousError.current = error
     }, [error])
 
-    let InputComponent: React.ElementType = InputCustom
+    let InputComponent: React.ElementType
 
-    // Comentado hasta crear los demas componentes
-    /*
     if (type === 'textarea') {
       InputComponent = CustomTextarea
-    } else if (type === 'date') {
-      InputComponent = CustomDateInput
     } else if (type === 'password') {
       InputComponent = CustomPassword
-    } else if (type === 'file') {
-      InputComponent = CustomInputFile
+    } else {
+      InputComponent = CustomInput
     }
-    */
 
     return (
       <div className="mb-4">
@@ -66,7 +63,7 @@ const MessageToasty = forwardRef<HTMLInputElement, MessageToastyProps>(
           ref={errorRef}
           className={`
             flex items-center text-red-600 text-sm font-medium
-            bg-red-50 rounded-md p-3 gap-2 border border-red-200
+            rounded-md px-3 py-1 gap-2
             ${error ? 'block' : 'hidden'}
           `}
           style={{

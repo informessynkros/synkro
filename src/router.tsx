@@ -2,6 +2,10 @@ import type { ReactNode } from "react"
 import { routesDashboard, type RouteConfig } from "./helpers/routes/routes"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import DashboardLayout from "./layouts/DashboardLayout"
+import AuthLayout from "./layouts/AuthLayout"
+import Login from "./views/auth/Login"
+import ForgotPassword from "./views/auth/ForgotPassword"
+import NotFound from "./views/error/404"
 
 function Router() {
 
@@ -35,6 +39,14 @@ function Router() {
         <Route element={<DashboardLayout />}>
           {generateRoutes(routesDashboard)}
         </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+        </Route>
+
+        {/* Not found */}
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </BrowserRouter>
