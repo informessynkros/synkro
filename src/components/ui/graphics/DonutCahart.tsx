@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { ChevronRight } from 'lucide-react'
-import useMediaQueries from '../../hooks/useMediaQueries'
+import useMediaQueries from '../../../hooks/useMediaQueries'
 import LineSeparator from '../lineSeparator/LineSeparator'
 
 interface DonutChartData {

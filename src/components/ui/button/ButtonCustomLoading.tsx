@@ -2,7 +2,7 @@
 
 import type { LucideIcon } from "lucide-react"
 import Spinner from "../spinner/Spinner"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 interface ButtonProps {
   text: string
@@ -35,7 +35,7 @@ const ButtonCustomLoading = ({
 
   const buttonClasses = isMobile
     ? `w-12 h-12 rounded-full flex items-center justify-center cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`
-    : `${large} py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`
+    : `${large} px-3 py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`
 
   return (
     <div className="flex justify-center">
@@ -52,7 +52,7 @@ const ButtonCustomLoading = ({
             speed={0.8}
           />
         ) : (
-          <Icon className={`${isDesktop ? 'w-7 h-7' : isTablet ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
+          <Icon className={`${isDesktop ? 'w-6 h-6' : isTablet ? 'w-5 h-5' : 'w-5 h-5'} text-white`} />
         )}
 
         {!isMobile && (

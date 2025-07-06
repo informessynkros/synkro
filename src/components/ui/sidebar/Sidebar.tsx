@@ -2,10 +2,10 @@
 
 import { useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { routesDashboard, type RouteConfig } from "../../helpers/routes/routes"
+import { routesDashboard, type RouteConfig } from "../../../helpers/routes/routes"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import gsap from "gsap"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 interface SidebarProps {

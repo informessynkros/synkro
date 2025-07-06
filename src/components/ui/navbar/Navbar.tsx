@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import InputSearch from "../input/InputSearch"
 import MenuProfile from "../menu/MenuProfile"
 import ButtonNotification from "../button/notifications/ButtonNotification"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 interface NavbarProps {

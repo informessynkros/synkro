@@ -6,7 +6,7 @@ import Dashboard from "../../views/home/Dashboard"
 import Inventory from "../../views/home/Inventory"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
-import CreateInventory from "../../views/home/inventory/CreateInventory"
+import CreateInventory from "../../components/inventory/CreateInventory"
 
 // Clase de rutas
 export interface RouteConfig {

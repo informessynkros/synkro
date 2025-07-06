@@ -1,7 +1,7 @@
 // Componente de botón normal
 
 import type { LucideIcon } from "lucide-react"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 interface ButtonProps {
   text: string
@@ -33,9 +33,9 @@ const ButtonCustom = ({
       <button
         onClick={onClick}
         type={type}
-        className={`${large} py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`}
+        className={`${large} px-3 py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`}
       >
-        <Icon className={`${isDesktop ? 'w-7 h-7' : isTablet ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
+        <Icon className={`${isDesktop ? 'w-6 h-6' : isTablet ? 'w-5 h-5' : 'w-5 h-5'} text-white`} />
         <span className={`text-white ${isDesktop ? 'text-normal' : isTablet ? 'text-sm' : 'text-sm'}`}>
           {text}
         </span>

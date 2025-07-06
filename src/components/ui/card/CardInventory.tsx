@@ -1,7 +1,7 @@
 // Carta de inventario
 
 import type { LucideIcon } from "lucide-react"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 interface CardInventoryProps {

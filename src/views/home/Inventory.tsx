@@ -1,7 +1,7 @@
 // Vista de inventario
 
 import { Calendar } from "lucide-react"
-import CardInventory from "../../components/card/CardInventory"
+import CardInventory from "../../components/ui/card/CardInventory"
 import useMediaQueries from "../../hooks/useMediaQueries"
 
 

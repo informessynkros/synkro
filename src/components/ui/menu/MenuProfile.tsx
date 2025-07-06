@@ -5,7 +5,7 @@ import MenuItem from "./MenuItem"
 import LineSeparator from "../lineSeparator/LineSeparator"
 import { forwardRef, useEffect, useRef } from "react"
 import gsap from "gsap"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 interface MenuProfileProps {

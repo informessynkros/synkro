@@ -7,12 +7,14 @@ interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   icon?: LucideIcon
   error?: string
+  required?: boolean
 }
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(({
   label,
   icon: Icon,
   error,
+  required = false,
   ...props
 }, ref) => {
   const inputClasses = `w-full px-4 py-2 ${Icon ? "pl-10" : "pl-4"
@@ -25,6 +27,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(({
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium text-gray-700">
         {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <div className="relative">
         {Icon && (

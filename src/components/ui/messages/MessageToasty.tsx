@@ -1,10 +1,11 @@
 // Componente que nos ayuda con los mensajes de errores en los inputs
 import { CircleX, type LucideIcon } from 'lucide-react'
 import { forwardRef, type InputHTMLAttributes, useRef, useEffect } from 'react'
-import { errorAnimations } from '../../utils/animations'
+import { errorAnimations } from '../../../utils/animations'
 import CustomTextarea from '../input/CustomTextarea'
 import CustomPassword from '../input/CustomPassword'
 import CustomInput from '../input/InputCustom'
+import RadioButtonGroup from '../button/radioButton/RadioButtonGroup'
 
 export interface MessageToastyProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -42,6 +43,8 @@ const MessageToasty = forwardRef<HTMLInputElement, MessageToastyProps>(
       InputComponent = CustomTextarea
     } else if (type === 'password') {
       InputComponent = CustomPassword
+    } else if (type === "radio") {
+      InputComponent = RadioButtonGroup
     } else {
       InputComponent = CustomInput
     }

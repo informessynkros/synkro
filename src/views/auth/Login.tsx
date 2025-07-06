@@ -2,9 +2,9 @@
 
 import { Controller, useForm } from "react-hook-form"
 import type { AuthProps } from "../../schemas/auth-schema"
-import MessageToasty from "../../components/messages/MessageToasty"
+import MessageToasty from "../../components/ui/messages/MessageToasty"
 import { LockIcon, LogInIcon, MailOpen } from "lucide-react"
-import ButtonCustomLoading from "../../components/button/ButtonCustomLoading"
+import ButtonCustomLoading from "../../components/ui/button/ButtonCustomLoading"
 import { Link } from "react-router-dom"
 
 

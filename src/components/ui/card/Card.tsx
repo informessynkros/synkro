@@ -1,6 +1,6 @@
 // Componente de tarjeta corregido
 import { ChartSpline, ChevronRight, DollarSign, Plus, type LucideIcon, Percent } from "lucide-react"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 interface CardProps {
   icon: LucideIcon

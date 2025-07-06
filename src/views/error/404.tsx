@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ArrowLeft } from "lucide-react"
 import SlotMachineNumber from "../../components/animations/SlotMachineNumber"
-import ButtonCustom from "../../components/button/ButtonCustom"
+import ButtonCustom from "../../components/ui/button/ButtonCustom"
 
 
 const NotFound = () => {
@@ -85,7 +85,7 @@ const NotFound = () => {
       <div ref={imageRef} className="mb-8">
         <div className="w-64 h-64 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center">
           <div className="text-center">
-            <img src="../src/assets/404.svg" alt="Imagen que muestra un not found" />
+            <img src='https://images-synkros.s3.us-east-1.amazonaws.com/404.svg' alt="Imagen que muestra un not found" />
             <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-slate-500 rounded-full mx-auto mb-4 flex items-center justify-center" />
           </div>
         </div>

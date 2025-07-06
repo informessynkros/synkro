@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react"
 import { useState } from "react"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 const InputSearch = () => {

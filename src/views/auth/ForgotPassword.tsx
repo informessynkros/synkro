@@ -1,10 +1,10 @@
 // Vista de olvidaste password
 
 import { MailOpen, Send } from "lucide-react"
-import ButtonCustomLoading from "../../components/button/ButtonCustomLoading"
+import ButtonCustomLoading from "../../components/ui/button/ButtonCustomLoading"
 import { Controller, useForm } from "react-hook-form"
 import type { ForgoPassProps } from "../../schemas/forgoPass-schema"
-import MessageToasty from "../../components/messages/MessageToasty"
+import MessageToasty from "../../components/ui/messages/MessageToasty"
 import { Link } from "react-router-dom"
 
 

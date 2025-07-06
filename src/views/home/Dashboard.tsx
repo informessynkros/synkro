@@ -1,10 +1,10 @@
 // Vista de panel de control
 
 import { Box, ShoppingBag, User } from "lucide-react"
-import Card from "../../components/card/Card"
+import Card from "../../components/ui/card/Card"
 import useMediaQueries from "../../hooks/useMediaQueries"
-import CustomLineChart from "../../components/graphics/LineChart"
-import CustomDonutChart from "../../components/graphics/DonutCahart"
+import CustomLineChart from "../../components/ui/graphics/LineChart"
+import CustomDonutChart from "../../components/ui/graphics/DonutCahart"
 
 
 const Dashboard = () => {

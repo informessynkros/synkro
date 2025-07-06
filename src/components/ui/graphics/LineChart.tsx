@@ -1,7 +1,7 @@
 // Componente de gráfica de líneas
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
-import useMediaQueries from '../../hooks/useMediaQueries'
+import useMediaQueries from '../../../hooks/useMediaQueries'
 import LineSeparator from '../lineSeparator/LineSeparator'
 
 interface LineChartData {

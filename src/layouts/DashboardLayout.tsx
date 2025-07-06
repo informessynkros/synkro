@@ -1,8 +1,8 @@
 // Layout dashboard
 
 import { Outlet } from "react-router-dom"
-import Navbar from "../components/navbar/Navbar"
-import Sidebar from "../components/sidebar/Sidebar"
+import Navbar from "../components/ui/navbar/Navbar"
+import Sidebar from "../components/ui/sidebar/Sidebar"
 import { useEffect, useState } from "react"
 import useMediaQueries from "../hooks/useMediaQueries"
 
