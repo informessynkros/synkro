@@ -26,6 +26,7 @@ const Inventory = () => {
           title="Cargar inventario"
           paragraph='Una vez creado tu almacén, carga tu primer inventario con el "input file" que te da tu proveedor de sims'
           background="#666"
+          href="/charge-inventory"
         />
       </div>
     </div>

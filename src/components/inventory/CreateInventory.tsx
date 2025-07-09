@@ -11,12 +11,13 @@ import ButtonCustom from "../ui/button/ButtonCustom"
 import useNavigation from "../../hooks/useNavigation"
 import ButtonCustomLoading from "../ui/button/ButtonCustomLoading"
 import LineSeparator from "../ui/lineSeparator/LineSeparator"
+import Section from "../ui/section/Section"
 
 
 const CreateInventory = () => {
 
   // Hooks
-  const { isDesktop, isMobile } = useMediaQueries()
+  const { isDesktop, isTablet } = useMediaQueries()
   const { goBack } = useNavigation()
 
   const defaultValues = useMemo(
@@ -72,16 +73,15 @@ const CreateInventory = () => {
 
   return (
     <>
-      <div className="bg-white shadow-md p-6 rounded-md">
-        <div className="text-[#777] flex items-center gap-3">
-          <Box />
-          <span>Inventario - Altan almacén</span>
-        </div>
-      </div>
+      <Section
+        text="Inventario - Alta almacén"
+        icon={Box}
+      />
 
       <div className="bg-white shadow-md p-6 rounded-md mt-6">
         <form onSubmit={handleSubmit(handleDataSubmit)}>
-          <div className={`grid ${isDesktop ? 'grid-cols-2 gap-x-8' : isMobile ? 'grid-cols-1' : ''}`}>
+          {/* <div className={`grid ${isDesktop ? 'grid-cols-2 gap-x-8' : isTablet ? 'grid-cols-1 gap-x-8' : isMobile ? 'grid-cols-1' : ''}`}> */}
+          <div className={`grid ${isDesktop ? 'grid-cols-2 gap-x-8' : isTablet ? 'grid-cols-1' : ''}`}>
             {/* Row 1: Nombre y tipo de inventario */}
             <Controller
               name="nombre"
@@ -266,23 +266,22 @@ const CreateInventory = () => {
               )}
             />
 
-            <LineSeparator className="col-span-2 my-5" />
-            {/* Row: 6: Botones de acción */}
-            <div className="flex justify-end col-span-2 gap-4">
-              <ButtonCustom
-                text="Cancelar"
-                icon={CircleX}
-                onClick={goBack}
-              />
+          </div>
+          <LineSeparator className="my-5" />
+          <div className="flex justify-end gap-4">
+            <ButtonCustom
+              text="Cancelar"
+              icon={CircleX}
+              onClick={goBack}
+            />
 
-              <ButtonCustomLoading
-                text="Crear almacén"
-                loadingText="Creando..."
-                isLoading={false}
-                icon={SaveAll}
-                type="submit"
-              />
-            </div>
+            <ButtonCustomLoading
+              text="Crear almacén"
+              loadingText="Creando..."
+              isLoading={false}
+              icon={SaveAll}
+              type="submit"
+            />
           </div>
         </form>
       </div>
