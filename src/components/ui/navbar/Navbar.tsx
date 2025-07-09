@@ -122,7 +122,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             <button
               ref={toggleRef}
               onClick={handleToggleClick}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
               aria-label="Toggle sidebar"
             >
               <Menu className="w-6 h-6 text-gray-700" />
@@ -168,7 +168,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
               <button
                 ref={toggleRef}
                 onClick={handleToggleClick}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 aria-label="Toggle sidebar"
               >
                 <Menu className="w-5 h-5 text-gray-700" />
@@ -179,7 +179,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
               <button
                 ref={searchButtonRef}
                 onClick={handleSearchToggle}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 aria-label="Buscar"
               >
                 <Search className="w-5 h-5 text-gray-700" />
@@ -221,7 +221,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             <button
               ref={toggleRef}
               onClick={handleToggleClick}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
               aria-label="Toggle sidebar"
             >
               <Menu className="w-6 h-6 text-gray-700" />

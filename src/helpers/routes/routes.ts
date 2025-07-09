@@ -7,6 +7,7 @@ import Inventory from "../../views/home/Inventory"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
 import CreateInventory from "../../components/inventory/CreateInventory"
+import ChargeInventory from "../../components/inventory/ChargeInventory"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -61,12 +62,20 @@ export const routesDashboard: RouteConfig[] = [
       },
     ]
   },
-  { // Vista de inventario
+  { // Crear almacén
     key: 'create-inventory',
     path: '/create-inventory',
     name: 'Crear almacén',
     icon: LayoutDashboard,
     component: CreateInventory,
+    showInSidebar: false,
+  },
+  { // Cargar de inventario
+    key: 'charge-inventory',
+    path: '/charge-inventory',
+    name: 'Cargar almacén',
+    icon: LayoutDashboard,
+    component: ChargeInventory,
     showInSidebar: false,
   }
 ]
