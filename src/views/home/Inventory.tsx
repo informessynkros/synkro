@@ -6,7 +6,7 @@ import inventory from '../../assets/inventoryData.json'
 import { useMemo } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { LabelBadge } from "../../components/ui/label/LabelBadge"
-import type { Inventory } from "../../schemas/inventory-schema"
+import type { InventoryType } from "../../schemas/inventory-schema"
 
 
 const Inventory = () => {
@@ -20,7 +20,7 @@ const Inventory = () => {
   }, [inventory])
 
   // Definicion de inventario para pintarlos dentro de la tabla
-  const columns: ColumnDef<Inventory>[] = [
+  const columns: ColumnDef<InventoryType>[] = [
     {
       header: 'ID',
       accessorKey: "consecutiveNumber",
