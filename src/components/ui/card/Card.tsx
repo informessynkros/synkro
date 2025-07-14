@@ -1,6 +1,7 @@
 // Componente de tarjeta corregido
 import { ChartSpline, ChevronRight, DollarSign, Plus, type LucideIcon, Percent } from "lucide-react"
 import useMediaQueries from "../../../hooks/useMediaQueries"
+import Label from "../label/Label"
 
 interface CardProps {
   icon: LucideIcon
@@ -65,10 +66,6 @@ const Card = ({
     ? 'text-white'
     : 'text-gray-900'
 
-  const weeklyTextClasses = isDark
-    ? 'text-gray-400 ml-2'
-    : 'text-gray-500 ml-2'
-
   return (
     <div className={cardClasses}>
       <div className="flex items-center justify-between">
@@ -101,11 +98,11 @@ const Card = ({
           </div>
         </div>
         <div className={`flex items-center gap-3 ${metricsClasses}`}>
-          <div className="flex items-center">
-            <Plus className="w-3.5 h-3.5 mr-1" />
-            <span>{weeklyQuantity}</span>
-            <span className={weeklyTextClasses}>Está semana</span>
-          </div>
+          <Label
+            text="Está semana"
+            textCount={weeklyQuantity}
+            icon={Plus}
+          />
         </div>
       </div>
     </div>

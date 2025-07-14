@@ -1,8 +1,11 @@
 // Componente de gráfica de líneas
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
 import useMediaQueries from '../../../hooks/useMediaQueries'
+import { optionsLineChart } from '../../../utils/graphics/configurationGraphics'
 import LineSeparator from '../lineSeparator/LineSeparator'
+import './index'
+import { Line } from 'react-chartjs-2'
+
 
 interface LineChartData {
   name: string
@@ -23,6 +26,41 @@ const CustomLineChart = ({
 }: CustomLineChartProps) => {
 
   const { isMobile } = useMediaQueries()
+
+  // Preparamos los datos de la gráfica
+  const chartData = {
+    labels: data.map(item => item.name),
+    datasets: [
+      {
+        label: 'Forecast',
+        data: data.map(item => item.forecast),
+        borderColor: '#333333',
+        backgroundColor: '#333333',
+        borderWidth: 2,
+        pointBorderColor: '#333333',
+        pointBackgroundColor: '#333333',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 2,
+        tension: 0.4,
+      },
+      {
+        label: 'Activaciones',
+        data: data.map(item => item.activaciones),
+        borderColor: '#cccccc',
+        backgroundColor: '#cccccc',
+        borderWidth: 2,
+        pointBorderColor: '#cccccc',
+        pointBackgroundColor: '#cccccc',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 2,
+        tension: 0.4,
+      }
+    ]
+  }
 
   return (
     <div className={`bg-white rounded-2xl p-6 ${className}`}>
@@ -45,64 +83,7 @@ const CustomLineChart = ({
       <LineSeparator />
 
       <div className="w-full h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 20,
-            }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#f0f0f0"
-              horizontal={true}
-              vertical={false}
-            />
-            <XAxis
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#666', fontSize: 12 }}
-              dy={10}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#666', fontSize: 12 }}
-              domain={[0, 70]}
-            />
-            <Legend
-              verticalAlign="top"
-              height={36}
-              iconType="circle"
-              wrapperStyle={{
-                paddingBottom: '20px',
-                fontSize: '14px'
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="forecast"
-              stroke="#333333"
-              strokeWidth={2}
-              dot={{ fill: '#333333', strokeWidth: 2, r: 4 }}
-              name="Forecast"
-              activeDot={{ r: 6, stroke: '#333333', strokeWidth: 2 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="activaciones"
-              stroke="#cccccc"
-              strokeWidth={2}
-              dot={{ fill: '#cccccc', strokeWidth: 2, r: 4 }}
-              name="Activaciones"
-              activeDot={{ r: 6, stroke: '#cccccc', strokeWidth: 2 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <Line data={chartData} options={optionsLineChart} />
       </div>
     </div>
   )
