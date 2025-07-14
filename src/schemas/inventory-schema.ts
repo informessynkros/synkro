@@ -1,5 +1,7 @@
 // Schema de inventario
 
+import z from "zod"
+
 export interface InventoryFormData {
   nombre: string
   calle: string
@@ -12,3 +14,21 @@ export interface InventoryFormData {
   descripcion: string
   ubicacion: string
 }
+
+
+export const InventorySchema = z.object({
+  inventories: z.array(
+    z.object({
+      iccid: z.string(),
+      imsi: z.string(),
+      msisdn: z.string(),
+      fabricante: z.string(),
+      fechaCarga: z.string(),
+      almcaen: z.string(),
+      tipoAlmacen: z.string(),
+      estadoLinea: z.string()
+    })
+  )
+})
+
+export type Inventory = z.infer<typeof InventorySchema>['inventories'][number]

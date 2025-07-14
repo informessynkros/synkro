@@ -1,0 +1,54 @@
+{
+  "inventories": [
+    {
+      "iccid": "6537399292922",
+      "imsi": "334140102020",
+      "msisdn": "5564930303",
+      "fabricante": "Valid",
+      "fechaCarga": "20-07-2025",
+      "almcaen": "39842-231",
+      "tipoAlmacen": "Fisico",
+      "estadoLinea": "Idle"
+    },
+    {
+      "iccid": "6537399292923",
+      "imsi": "334140102021",
+      "msisdn": "3749403030",
+      "fabricante": "Valid",
+      "fechaCarga": "22-02-2022",
+      "almcaen": "39842-231",
+      "tipoAlmacen": "Virtual",
+      "estadoLinea": "Idle"
+    },
+    {
+      "iccid": "6537399292924",
+      "imsi": "334140102022",
+      "msisdn": "4493030303",
+      "fabricante": "G+D",
+      "fechaCarga": "22-02-2022",
+      "almcaen": "39842-231",
+      "tipoAlmacen": "Fisico",
+      "estadoLinea": "Suspendida"
+    },
+    {
+      "iccid": "6537399292925",
+      "imsi": "334140102023",
+      "msisdn": "3930404034",
+      "fabricante": "G+D",
+      "fechaCarga": "22-02-2022",
+      "almcaen": "39842-231",
+      "tipoAlmacen": "Fisico",
+      "estadoLinea": "Idle"
+    },
+    {
+      "iccid": "6537399292926",
+      "imsi": "334140102024",
+      "msisdn": "4748404030",
+      "fabricante": "G+D",
+      "fechaCarga": "20-03-2023",
+      "almcaen": "39842-231",
+      "tipoAlmacen": "Fisico",
+      "estadoLinea": "Activa"
+    }
+  ]
+}
