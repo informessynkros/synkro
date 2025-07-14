@@ -3,11 +3,11 @@
 import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer } from "lucide-react"
 import type { ComponentType } from "react"
 import Dashboard from "../../views/home/Dashboard"
-import Inventory from "../../views/home/Inventory"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
 import CreateInventory from "../../components/inventory/CreateInventory"
 import ChargeInventory from "../../components/inventory/ChargeInventory"
+import Inventory from "../../views/home/Inventory"
 
 // Clase de rutas
 export interface RouteConfig {

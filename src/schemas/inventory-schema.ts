@@ -31,4 +31,4 @@ export const InventorySchema = z.object({
   )
 })
 
-export type Inventory = z.infer<typeof InventorySchema>['inventories'][number]
+export type InventoryType = z.infer<typeof InventorySchema>['inventories'][number]
