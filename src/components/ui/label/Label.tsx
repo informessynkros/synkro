@@ -27,7 +27,7 @@ const Label = ({
   // Variantes de color con mejor contraste
   const variants = {
     dark: {
-      background: 'bg-gray-800/90', // Opacity para suavizar
+      background: 'bg-gray-800/90',
       text: 'text-white',
       icon: 'text-gray-200'
     },
@@ -93,9 +93,8 @@ const Label = ({
   return (
     <div
       className={`
-        flex items-center rounded-lg backdrop-blur-sm
-        transition-all duration-200 ease-in-out
-        hover:scale-105 hover:shadow-sm
+        flex items-center rounded-lg text-xs
+        transition-all duration-200 ease-in-out hover:shadow-sm
         ${currentVariant.background}
         ${currentVariant.text}
         ${currentSize.container}

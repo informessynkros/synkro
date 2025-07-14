@@ -5,6 +5,7 @@ import Card from "../../components/ui/card/Card"
 import useMediaQueries from "../../hooks/useMediaQueries"
 import CustomLineChart from "../../components/ui/graphics/LineChart"
 import CustomDonutChart from "../../components/ui/graphics/DonutCahart"
+import Toast from "../../components/ui/toast/Toast"
 
 
 const Dashboard = () => {
@@ -38,7 +39,7 @@ const Dashboard = () => {
   ]
 
   return (
-    <div className="">
+    <>
       <div className={`grid ${isDesktop ? 'grid-cols-3 gap-8' : isTablet ? 'grid-cols-2 gap-5' : isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-1 gap-3'}`}>
         <Card
           icon={ShoppingBag}
@@ -88,7 +89,14 @@ const Dashboard = () => {
           title="Recargas"
         />
       </div>
-    </div>
+
+      <Toast
+        type="info"
+        title="Info"
+        message="Mostrando alerta ejemplar"
+      // duration={}
+      />
+    </>
   )
 }
 
