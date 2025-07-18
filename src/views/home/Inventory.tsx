@@ -1,6 +1,8 @@
 // Vista de inventario
 
-import { Boxes } from "lucide-react"
+import { BoxSelect } from "lucide-react"
+// import CardInventory from "../../components/ui/card/CardInventory"
+// import useMediaQueries from "../../hooks/useMediaQueries"
 import Table from "../../components/ui/table/Table"
 import inventory from '../../assets/inventoryData.json'
 import { useMemo } from "react"
@@ -11,6 +13,9 @@ import type { InventoryType } from "../../schemas/inventory-schema"
 
 const Inventory = () => {
 
+  // Hook
+  // const { isDesktop, isTablet, isMobile } = useMediaQueries()
+
   // Números consecutivos
   const numberedInventory = useMemo(() => {
     return inventory.inventories.map((inv, index) => ({
@@ -19,7 +24,7 @@ const Inventory = () => {
     }))
   }, [inventory])
 
-  // Definicion de inventario para pintarlos dentro de la tabla
+  // Definicion de usuarios para pintarlos dentro de la tabla
   const columns: ColumnDef<InventoryType>[] = [
     {
       header: 'ID',
@@ -84,13 +89,30 @@ const Inventory = () => {
 
   return (
     <div>
+      {/* <div className={`grid ${isDesktop ? 'grid-cols-3' : isTablet ? 'grid-cols-2' : isMobile ? 'grid-cols-1' : ''} gap-5`}>
+        <CardInventory
+          icon={Calendar}
+          title="Crear almacén"
+          paragraph="Para poder cargar tu inventario inicial debes de crear tu primer almacén, da click aqui y configuralo"
+          background="#202123"
+          href="/create-inventory"
+        />
+
+        <CardInventory
+          icon={Calendar}
+          title="Cargar inventario"
+          paragraph='Una vez creado tu almacén, carga tu primer inventario con el "input file" que te da tu proveedor de sims'
+          background="#666"
+          href="/charge-inventory"
+        />
+      </div> */}
+
       <Table
         data={numberedInventory}
         columns={columns}
         title="Almacén"
-        icon={Boxes}
-        paragraph="Aquí podrás ver todos los registros existentes de inventarios"
-        onButtonOptions // Esto activa las acciones de inventario
+        icon={BoxSelect}
+        paragraph="Aquí podrás ver todos los registros existentes en el inventario"
       />
     </div>
   )
