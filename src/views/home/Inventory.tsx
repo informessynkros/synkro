@@ -5,16 +5,30 @@ import { BoxSelect } from "lucide-react"
 // import useMediaQueries from "../../hooks/useMediaQueries"
 import Table from "../../components/ui/table/Table"
 import inventory from '../../assets/inventoryData.json'
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { LabelBadge } from "../../components/ui/label/LabelBadge"
 import type { InventoryType } from "../../schemas/inventory-schema"
+import useInventories from "../../hooks/useInventories"
 
 
 const Inventory = () => {
 
   // Hook
   // const { isDesktop, isTablet, isMobile } = useMediaQueries()
+  const {
+    inventories,
+    isLoadingInven,
+    isErrorInven,
+    errorInven
+  } = useInventories('BE001')
+
+  useEffect
+
+  console.log('isLoadingInven', isLoadingInven)
+  console.log('isErrorInven', isErrorInven)
+  console.log('errorInven', errorInven)
+  console.log('inventories', inventories)
 
   // Números consecutivos
   const numberedInventory = useMemo(() => {
