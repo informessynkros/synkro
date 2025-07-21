@@ -73,13 +73,19 @@ function Table<TData>({
     'fechaCarga',
     'almacen',
     'tipoAlmacen',
-    'estadoLinea'
+    'estadoLinea',
+    // Usuarios
+    'name',
+    'checkpoint',
+    'be_id',
+    'mfa_enabled',
+    'status',
   ]
 
   // Configuración de columnas por breakpoint
   const RESPONSIVE_CONFIG = {
-    mobile: ['consecutiveNumber', 'iccid', 'estadoLinea'],
-    tablet: ['consecutiveNumber', 'iccid', 'imsi', 'fabricante', 'estadoLinea'],
+    mobile: ['consecutiveNumber', 'iccid', 'estadoLinea', 'name', 'mfa_enabled'],
+    tablet: ['consecutiveNumber', 'iccid', 'imsi', 'fabricante', 'estadoLinea', 'checkpoint', 'status', 'id_user', 'name', 'be_id'],
     desktop: COLUMN_ORDER
   }
 

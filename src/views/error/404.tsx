@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ArrowLeft } from "lucide-react"
-import SlotMachineNumber from "../../components/animations/SlotMachineNumber"
+import SlotMachineNumber from "../../components/ui/animations/SlotMachineNumber"
 import ButtonCustom from "../../components/ui/button/ButtonCustom"
 
 

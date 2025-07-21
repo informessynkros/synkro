@@ -2,7 +2,7 @@
 
 import gsap from "gsap"
 import { useEffect, useRef, useState } from "react"
-import useMediaQueries from "../../hooks/useMediaQueries"
+import useMediaQueries from "../../../hooks/useMediaQueries"
 
 
 interface SlotMachineNumberProps {
