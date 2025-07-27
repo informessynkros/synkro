@@ -1,6 +1,7 @@
 // Endpoints
 
 import { handleApiError } from "../helpers/errorHandler"
+import type { AlmacenFormData } from "../schemas/warehouse-schema"
 import api from "../utils/axios"
 
 // ------------------------- Usuarios -------------------------
@@ -16,13 +17,26 @@ export const getUsers = async () => {
 }
 
 
-// ------------------------- Inventario -------------------------
+// ------------------------- Almacen -------------------------
 
 // - Obtención de almacenes por Be
-export const getInventories = async (id_be: string) => {
+export const getWarehouses = async (id_be: string) => {
   try {
-    const { data } = await api.post('/querywarehouse', { id_be: id_be })
-    return data.inventories
+    const dataBeId = {
+      id_be
+    }
+    const { data } = await api.post('/querywarehouse', dataBeId)
+    return data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+// - Creación de almacén
+export const createWarehouse = async (formData: AlmacenFormData) => {
+  try {
+    const { data } = await api.post('/createwarehouse', formData)
+    return data
   } catch (error) {
     handleApiError(error)
   }

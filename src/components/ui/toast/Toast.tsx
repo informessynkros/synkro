@@ -10,9 +10,10 @@ interface ToastProps {
   title: string
   message: string
   duration?: number
+  onClose?: () => void
 }
 
-const Toast = ({ type, title, message, duration = 4000 }: ToastProps) => {
+const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) => {
 
   // Estados
   const [isVisible, setIsVisible] = useState(true) // Mostrar tostada
@@ -96,6 +97,7 @@ const Toast = ({ type, title, message, duration = 4000 }: ToastProps) => {
         ease: "power2.in",
         onComplete: () => {
           setIsVisible(false)
+          onClose?.()
         }
       })
     }

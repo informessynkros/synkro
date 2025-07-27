@@ -6,6 +6,8 @@ import AuthLayout from "./layouts/AuthLayout"
 import Login from "./views/auth/Login"
 import ForgotPassword from "./views/auth/ForgotPassword"
 import NotFound from "./views/error/404"
+import 'leaflet/dist/leaflet.css'
+import { ToastProvider } from "./context/ToastContext"
 
 function Router() {
 
@@ -34,21 +36,23 @@ function Router() {
 
   return (
     <BrowserRouter>
-      <Routes>
+      <ToastProvider>
+        <Routes>
 
-        <Route element={<DashboardLayout />}>
-          {generateRoutes(routesDashboard)}
-        </Route>
+          <Route element={<DashboardLayout />}>
+            {generateRoutes(routesDashboard)}
+          </Route>
 
-        <Route element={<AuthLayout />}>
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-        </Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          </Route>
 
-        {/* Not found */}
-        <Route path="*" element={<NotFound />} />
+          {/* Not found */}
+          <Route path="*" element={<NotFound />} />
 
-      </Routes>
+        </Routes>
+      </ToastProvider>
     </BrowserRouter>
   )
 }

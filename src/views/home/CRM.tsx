@@ -15,9 +15,9 @@ const CRM = () => {
   // Hooks
   const {
     users,
-    usersIsLoading,
-    usersIsError,
-    usersError
+    isLoadingUsers,
+    isErrorUsers,
+    errorUsers
   } = useUsers()
 
   // Ocultar el id de los usuarios
@@ -110,9 +110,9 @@ const CRM = () => {
   return (
     <div className="h-screen">
       <LoadingErrorHandler
-        isLoading={usersIsLoading}
-        isError={usersIsError}
-        error={usersError}
+        isLoading={isLoadingUsers}
+        isError={isErrorUsers}
+        error={errorUsers}
         loadingMessage="Cargando usuarios..."
       >
         {contentUsers}

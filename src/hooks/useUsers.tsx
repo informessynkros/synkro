@@ -17,9 +17,9 @@ const useUsers = () => {
   return {
     // Obtención de usuarios
     users: usersQuery.data || [],
-    usersIsLoading: usersQuery.isLoading,
-    usersIsError: usersQuery.isError,
-    usersError: usersQuery.error
+    isLoadingUsers: usersQuery.isLoading,
+    isErrorUsers: usersQuery.isError,
+    errorUsers: usersQuery.error
   }
 }
 
