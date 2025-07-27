@@ -11,17 +11,11 @@ const NotFoundPage = () => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    // Asegurar visibilidad inicial
-    gsap.set([titleRef.current, descriptionRef.current, buttonRef.current], {
-      opacity: 1,
-      y: 0
-    })
-
     const tl = gsap.timeline()
 
-    // Animación inicial del contenedor
+    // Animación inicial del contenedor - SIN opacity
     tl.from(containerRef.current, {
-      opacity: 0,
+      scale: 0.95,
       duration: 0.5,
       ease: "power2.out"
     })
@@ -38,21 +32,43 @@ const NotFoundPage = () => {
       })
     }
 
-    // Animación del camión (entrada desde la izquierda)
+    // Animación del camión - SOLO posición inicial
     tl.from(truckRef.current, {
       x: -200,
-      opacity: 0,
       duration: 1.2,
-      ease: "back.out(1.7)"
+      ease: "back.out(1.7)",
+      onComplete: () => {
+        // Después de la entrada, iniciar movimiento continuo
+        gsap.to(truckRef.current, {
+          x: "+=30",
+          duration: 3,
+          ease: "power1.inOut",
+          yoyo: true,
+          repeat: -1
+        })
+      }
     }, 0.3)
 
-    // Efecto slot machine para el 404
+    // Animación de ruedas - solo elementos con rayos/radios
+    const wheelSpokes = truckRef.current?.querySelectorAll('.wheel-spoke')
+    if (wheelSpokes) {
+      wheelSpokes.forEach(spoke => {
+        gsap.to(spoke, {
+          rotation: 360,
+          duration: 0.8,
+          ease: "none",
+          repeat: -1,
+          transformOrigin: "center center"
+        })
+      })
+    }
+
+    // Efecto slot machine para el 404 - SIN tocar opacity
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     const finalNumbers = ['4', '0', '4']
 
     slotRefs.current.forEach((slot, index) => {
       if (slot) {
-        // Animación de giro rápido
         gsap.to(slot, {
           rotationX: 360 * 5,
           duration: 2 + index * 0.3,
@@ -74,33 +90,21 @@ const NotFoundPage = () => {
       }
     })
 
-    // Animación del texto
-    tl.fromTo(titleRef.current, {
+    // Animación del texto - posición Y sin callbacks de opacity
+    tl.from(titleRef.current, {
       y: 30,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
       duration: 0.8,
       ease: "power2.out"
     }, 1.5)
 
-    tl.fromTo(descriptionRef.current, {
+    tl.from(descriptionRef.current, {
       y: 20,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
       duration: 0.6,
       ease: "power2.out"
     }, 1.8)
 
-    tl.fromTo(buttonRef.current, {
+    tl.from(buttonRef.current, {
       y: 20,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
       duration: 0.6,
       ease: "power2.out"
     }, 2.1)
@@ -139,7 +143,7 @@ const NotFoundPage = () => {
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
 
       {/* Ilustración SVG de fondo */}
       <div className="absolute inset-0 flex items-center justify-center">
@@ -147,7 +151,7 @@ const NotFoundPage = () => {
           width="800"
           height="600"
           viewBox="0 0 800 600"
-          className="w-full h-full max-w-4xl opacity-10"
+          className="w-full h-full max-w-4xl opacity-100"
         >
           {/* Montañas de fondo */}
           <path
@@ -163,16 +167,16 @@ const NotFoundPage = () => {
 
           {/* Nubes */}
           <g ref={cloudsRef}>
-            <ellipse cx="150" cy="120" rx="40" ry="25" fill="white" opacity="0.8" />
-            <ellipse cx="180" cy="115" rx="35" ry="20" fill="white" opacity="0.8" />
-            <ellipse cx="130" cy="115" rx="30" ry="18" fill="white" opacity="0.8" />
+            <ellipse cx="150" cy="200" rx="40" ry="25" fill="white" opacity="0.8" />
+            <ellipse cx="180" cy="195" rx="35" ry="20" fill="white" opacity="0.8" />
+            <ellipse cx="130" cy="195" rx="30" ry="18" fill="white" opacity="0.8" />
 
-            <ellipse cx="450" cy="80" rx="45" ry="28" fill="white" opacity="0.7" />
-            <ellipse cx="485" cy="75" rx="38" ry="22" fill="white" opacity="0.7" />
-            <ellipse cx="420" cy="75" rx="32" ry="20" fill="white" opacity="0.7" />
+            <ellipse cx="450" cy="160" rx="45" ry="28" fill="white" opacity="0.7" />
+            <ellipse cx="485" cy="155" rx="38" ry="22" fill="white" opacity="0.7" />
+            <ellipse cx="420" cy="155" rx="32" ry="20" fill="white" opacity="0.7" />
 
-            <ellipse cx="650" cy="140" rx="35" ry="20" fill="white" opacity="0.6" />
-            <ellipse cx="675" cy="135" rx="30" ry="18" fill="white" opacity="0.6" />
+            <ellipse cx="650" cy="220" rx="35" ry="20" fill="white" opacity="0.6" />
+            <ellipse cx="675" cy="215" rx="30" ry="18" fill="white" opacity="0.6" />
           </g>
 
           {/* Carretera */}
@@ -190,9 +194,12 @@ const NotFoundPage = () => {
         </svg>
       </div>
 
-      {/* Camión animado */}
-      <div ref={truckRef} className="absolute bottom-32 left-1/4 z-10">
+      {/* Camión animado en la carretera */}
+      <div ref={truckRef} className="absolute bottom-28 left-1/2 z-10">
         <svg width="120" height="60" viewBox="0 0 120 60">
+          {/* Sombra del camión */}
+          <ellipse cx="60" cy="58" rx="50" ry="8" fill="#000000" opacity="0.2" />
+
           {/* Cabina del camión */}
           <rect x="10" y="20" width="30" height="25" fill="#ef4444" rx="2" />
           <rect x="12" y="22" width="8" height="8" fill="#93c5fd" opacity="0.8" />
@@ -210,13 +217,41 @@ const NotFoundPage = () => {
           <rect x="60" y="30" width="8" height="8" fill="#8b5cf6" />
           <rect x="70" y="30" width="8" height="8" fill="#10b981" />
 
-          {/* Ruedas */}
+          {/* ✅ RUEDAS ARREGLADAS - Solo giran los rayos/radios */}
+          {/* Rueda 1 */}
           <circle cx="25" cy="50" r="8" fill="#1f2937" />
           <circle cx="25" cy="50" r="5" fill="#374151" />
+          <g className="wheel-spoke">
+            <line x1="25" y1="45" x2="25" y2="55" stroke="#1f2937" strokeWidth="1" />
+            <line x1="20" y1="50" x2="30" y2="50" stroke="#1f2937" strokeWidth="1" />
+          </g>
+
+          {/* Rueda 2 */}
           <circle cx="75" cy="50" r="8" fill="#1f2937" />
           <circle cx="75" cy="50" r="5" fill="#374151" />
+          <g className="wheel-spoke">
+            <line x1="75" y1="45" x2="75" y2="55" stroke="#1f2937" strokeWidth="1" />
+            <line x1="70" y1="50" x2="80" y2="50" stroke="#1f2937" strokeWidth="1" />
+          </g>
+
+          {/* Rueda 3 */}
           <circle cx="85" cy="50" r="8" fill="#1f2937" />
           <circle cx="85" cy="50" r="5" fill="#374151" />
+          <g className="wheel-spoke">
+            <line x1="85" y1="45" x2="85" y2="55" stroke="#1f2937" strokeWidth="1" />
+            <line x1="80" y1="50" x2="90" y2="50" stroke="#1f2937" strokeWidth="1" />
+          </g>
+
+          {/* Humo del escape */}
+          <circle cx="8" cy="15" r="2" fill="#d1d5db" opacity="0.6">
+            <animate attributeName="opacity" values="0.6;0.3;0.6" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="5" cy="10" r="1.5" fill="#e5e7eb" opacity="0.4">
+            <animate attributeName="opacity" values="0.4;0.2;0.4" dur="2.5s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="3" cy="6" r="1" fill="#f3f4f6" opacity="0.3">
+            <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
+          </circle>
         </svg>
       </div>
 
@@ -236,8 +271,7 @@ const NotFoundPage = () => {
                 className="text-8xl md:text-9xl font-black text-blue-600 block leading-none"
                 style={{
                   fontFamily: 'system-ui, -apple-system, sans-serif',
-                  textShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                  color: '#2563eb'
+                  textShadow: '0 4px 8px rgba(0,0,0,0.1)'
                 }}
               >
                 0
@@ -246,30 +280,28 @@ const NotFoundPage = () => {
           ))}
         </div>
 
-        {/* Título */}
+        {/* Título - SIN estilos inline forzados */}
         <h1
           ref={titleRef}
-          className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
-          style={{ color: '#111827' }}
+          className="text-4xl md:text-5xl font-bold mb-4 text-black"
         >
           ¡Ups! Mercancía Perdida
         </h1>
 
-        {/* Descripción */}
+        {/* Descripción - MÁS SEPARACIÓN del botón */}
         <p
           ref={descriptionRef}
-          className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed"
-          style={{ color: '#374151' }}
+          className="text-lg md:text-xl mb-20 leading-relaxed text-gray-700"
         >
           Parece que esta página se desvió del almacén.
           <br />
           No te preocupes, nuestro camión te llevará de vuelta al inventario principal.
         </p>
 
-        {/* Botón de acción */}
+        {/* Botón de acción - SIN estilos inline forzados */}
         <button
           ref={buttonRef}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:shadow-xl text-lg hover:scale-105"
+          className="bg-blue-600 text-white font-semibold py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:shadow-xl text-lg hover:bg-blue-700"
           onClick={() => window.history.back()}
         >
           <span className="flex items-center space-x-2">
@@ -281,16 +313,6 @@ const NotFoundPage = () => {
         </button>
       </div>
 
-      {/* Elementos decorativos flotantes */}
-      <div className="absolute top-20 right-20">
-        <div className="w-12 h-12 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-      </div>
-      <div className="absolute top-32 left-16">
-        <div className="w-8 h-8 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
-      </div>
-      <div className="absolute bottom-40 right-32">
-        <div className="w-10 h-10 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '2s' }}></div>
-      </div>
     </div>
   )
 }
