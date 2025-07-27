@@ -47,7 +47,7 @@ const ButtonCustomLoading = ({
       >
         {isLoading ? (
           <Spinner
-            size={isMobile ? 20 : isDesktop ? 28 : isTablet ? 26 : 24}
+            size={20}
             color="border-white"
             speed={0.8}
           />

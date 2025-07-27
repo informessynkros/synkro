@@ -13,9 +13,6 @@ import type { InventoryType } from "../../schemas/inventory-schema"
 
 const Inventory = () => {
 
-  // Hook
-  // const { isDesktop, isTablet, isMobile } = useMediaQueries()
-
   // Números consecutivos
   const numberedInventory = useMemo(() => {
     return inventory.inventories.map((inv, index) => ({
@@ -110,7 +107,7 @@ const Inventory = () => {
       <Table
         data={numberedInventory}
         columns={columns}
-        title="Almacén"
+        title="Inventario"
         icon={BoxSelect}
         paragraph="Aquí podrás ver todos los registros existentes en el inventario"
       />

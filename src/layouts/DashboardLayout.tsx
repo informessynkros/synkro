@@ -13,7 +13,7 @@ const DashboardLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   // Hook
-  const { isLaptop, isTablet, isMobile } = useMediaQueries()
+  const { isDesktop, isLaptop, isTablet, isMobile } = useMediaQueries()
 
   // Auto cerramos el sidebar cuando llegue a tablet
   useEffect(() => {
@@ -70,7 +70,7 @@ const DashboardLayout = () => {
         <Navbar onToggleSidebar={toggleSidebar} />
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-          <div className={`mx-auto ${isLaptop ? 'p-6' : isTablet ? 'p-4' : isMobile ? 'p-2' : 'p-6'} h-full bg-gray-50`}>
+          <div className={`mx-auto ${isDesktop ? 'p-8' : isLaptop ? 'p-6' : isTablet ? 'p-4' : isMobile ? 'p-2' : 'p-2'} min-h-screen bg-gray-50`}>
             <Outlet />
           </div>
         </main>
