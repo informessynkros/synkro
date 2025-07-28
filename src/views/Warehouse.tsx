@@ -13,6 +13,7 @@ import useNavigation from "../hooks/useNavigation"
 
 const Warehouse = () => {
 
+  // BEID manual
   const BEID = 'BE001'
 
   // Hook

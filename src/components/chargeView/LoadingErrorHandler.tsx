@@ -6,6 +6,7 @@ import type { ReactNode } from "react"
 import { XCircle } from "lucide-react"
 import LottieAnimation from "../../components/ui/animations/LottieAnimation"
 import error404 from "../../components/lottie/error404.json"
+import CubeGrid from "../ui/spinner/CubeGrid"
 
 interface LoadingErrorHandlerProps {
   isLoading?: boolean
@@ -27,8 +28,8 @@ const LoadingErrorHandler = ({
 
   if (isLoading) { // Es pantalla de carga
     return (
-      <div className="sk-chase">
-        <div className="sk-chase-dot"></div>
+      <div className="flex items-center justify-center">
+        <CubeGrid text="Cargando información..." />
       </div>
     )
   }
