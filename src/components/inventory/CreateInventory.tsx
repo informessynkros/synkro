@@ -13,10 +13,18 @@ import ButtonCustomLoading from "../ui/button/ButtonCustomLoading"
 import LineSeparator from "../ui/lineSeparator/LineSeparator"
 import Section from "../ui/section/Section"
 import type { AlmacenFormData } from "../../schemas/warehouse-schema"
-import Map from "../ui/map/Map"
+// import Map from "../ui/map/Map"
 import DynamicInputArray from "../ui/input/DynamicInputArray"
 import useWarehouses from "../../hooks/useWarehouses"
+import GoogleMap from "../ui/map/GoogleMap"
 
+interface AddressData {
+  calle: string
+  municipio: string
+  ciudad: string
+  estado: string
+  cp: string
+}
 
 const CreateInventory = () => {
 
@@ -72,21 +80,33 @@ const CreateInventory = () => {
 
   // Función que me ayuda con la sincronización para el mapa
   const geocodeAddress = async (address: string) => {
-    try {
-      const response = await fetch(
-        `https://us1.locationiq.com/v1/search.php?key=pk.486427a5d6ca4b78b7bb29e5c84a3330&q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=mx`
-      )
-      const data = await response.json()
-
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat)
-        const lon = parseFloat(data[0].lon)
-        return [lat, lon] as [number, number]
+    return new Promise<[number, number] | null>((resolve) => {
+      if (!window.google) {
+        console.error('Google Maps API no está cargada')
+        resolve(null)
+        return
       }
-    } catch (error) {
-      console.error('Error geocodificando:', error)
-    }
-    return null
+  
+      const geocoder = new google.maps.Geocoder()
+  
+      geocoder.geocode(
+        { 
+          address: address,
+          language: 'es',
+          region: 'mx',
+          componentRestrictions: { country: 'MX' }
+        },
+        (results, status) => {
+          if (status === 'OK' && results && results.length > 0) {
+            const location = results[0].geometry.location
+            resolve([location.lat(), location.lng()])
+          } else {
+            console.error('Geocoding error:', status)
+            resolve(null)
+          }
+        }
+      )
+    })
   }
 
 
@@ -127,31 +147,60 @@ const CreateInventory = () => {
   }, [watch, isUpdatingFromMap])
 
   // Función para geocodificación inversa (coordendas -> dirección)
-  const reverseGeocode = async (lat: number, lng: number) => {
-    try {
-      const response = await fetch(
-        `https://us1.locationiq.com/v1/reverse.php?key=pk.486427a5d6ca4b78b7bb29e5c84a3330&lat=${lat}&lon=${lng}&format=json`
-      )
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+  const reverseGeocode = async (lat: number, lng: number): Promise<AddressData | null> => {
+    return new Promise<AddressData | null>((resolve) => {
+      if (!window.google) {
+        console.error('Google Maps API no está cargada')
+        resolve(null)
+        return
       }
-
-      const data = await response.json()
-
-      if (data && data.address) {
-        return {
-          calle: data.address.road || data.address.pedestrian || data.display_name?.split(',')[0] || '',
-          municipio: data.address.city_district || data.address.suburb || data.address.municipality || '',
-          ciudad: data.address.city || data.address.town || data.address.village || '',
-          estado: data.address.state || '',
-          cp: data.address.postcode || ''
+  
+      const geocoder = new google.maps.Geocoder()
+      const latlng = { lat: lat, lng: lng }
+  
+      geocoder.geocode(
+        { 
+          location: latlng,
+          language: 'es',
+          region: 'mx'
+        }, 
+        (results, status) => {
+          if (status === 'OK' && results && results.length > 0) {
+            const result = results[0]
+            const components = result.address_components
+  
+            // Función helper para extraer componentes
+            const getComponent = (types: string[]) => {
+              const component = components.find((comp) => 
+                comp.types.some((type) => types.includes(type))
+              )
+              return component?.long_name || ''
+            }
+  
+            // Extraer información específica para México
+            const streetNumber = getComponent(['street_number'])
+            const route = getComponent(['route'])
+            const calle = streetNumber && route ? `${route} ${streetNumber}` : (route || streetNumber || '')
+  
+            const addressData: AddressData = {
+              calle: calle || getComponent(['premise', 'subpremise']) || '',
+              municipio: getComponent(['sublocality', 'sublocality_level_1']) || 
+                        getComponent(['administrative_area_level_2']) || '',
+              ciudad: getComponent(['locality']) || 
+                     getComponent(['administrative_area_level_2']) || 
+                     getComponent(['sublocality']) || '',
+              estado: getComponent(['administrative_area_level_1']) || '',
+              cp: getComponent(['postal_code']) || ''
+            }
+  
+            resolve(addressData)
+          } else {
+            console.error('Geocoding error:', status)
+            resolve(null)
+          }
         }
-      }
-    } catch (error) {
-      console.error('Error en geocodificación inversa:', error)
-    }
-    return null
+      )
+    })
   }
 
   // Función para actualizar el formulario cuando se mueva el marcador
@@ -458,7 +507,13 @@ const CreateInventory = () => {
                   </p>
                 </div>
 
-                <Map
+                {/* <Map
+                  center={mapCenter}
+                  markerPosition={markerPosition}
+                  onMarkerDragEnd={handleMarkerMove}
+                  onMapClick={handleMapClick}
+                /> */}
+                <GoogleMap
                   center={mapCenter}
                   markerPosition={markerPosition}
                   onMarkerDragEnd={handleMarkerMove}

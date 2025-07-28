@@ -19,15 +19,15 @@ const useWarehouses = (id_be: string) => {
     queryKey: ['warehouses', id_be],
     enabled: !!id_be,
     retry: 1,
-    refetchInterval: 2000
+    refetchInterval: 1000
   })
 
   // Crear almacén
   const createWarehouseMutation = useMutation({
     mutationFn: createWarehouse,
     onSuccess: data => {
-      goView('/warehouses')
       queryClient.invalidateQueries({ queryKey: ['warehouses'] })
+      goView('/warehouses')
       showToast({
         type: 'success',
         title: 'Éxito',
