@@ -106,6 +106,22 @@ const AlgoliaSearch = ({
     }
   }, [isOpen, onClose])
 
+  useEffect(() => {
+    const handleClickButtons = (event: KeyboardEvent) => {
+      // Cmd+K en Mac, Ctrl+K en Windows/Linux
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault()
+        setIsOpen(true)
+      }
+    }
+
+    document.addEventListener('keydown', handleClickButtons)
+
+    return () => {
+      document.removeEventListener('keydown', handleClickButtons)
+    }
+  }, [])
+
   // Cerrar con ESC
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {

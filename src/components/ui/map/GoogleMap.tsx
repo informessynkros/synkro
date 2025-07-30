@@ -1,6 +1,6 @@
 // Mapa de google maps
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { Wrapper } from '@googlemaps/react-wrapper'
 import CubeGrid from "../spinner/CubeGrid"
 
@@ -45,7 +45,7 @@ const MapComponent = ({
 
     // Creamos el marcador
     markerRef.current = new google.maps.Marker({
-      position:{  lat: markerPosition[0], lng: markerPosition[1] },
+      position: { lat: markerPosition[0], lng: markerPosition[1] },
       map: mapInstanceRef.current,
       draggable: true,
       title: 'Ubicación del almacén',
@@ -57,7 +57,7 @@ const MapComponent = ({
         `),
         scaledSize: new google.maps.Size(32, 32),
         anchor: new google.maps.Point(16, 32)
-      } 
+      }
     })
 
     // Evet listener para arrastrar marcador
@@ -96,8 +96,8 @@ const MapComponent = ({
   }, [markerPosition])
 
   return (
-    <div 
-      ref={mapRef} 
+    <div
+      ref={mapRef}
       className="w-full h-80 rounded-lg border border-gray-200 shadow-sm"
       style={{ minHeight: '320px' }}
     />
@@ -106,9 +106,6 @@ const MapComponent = ({
 
 
 const GoogleMap = ({ ...props }: GoogleMapProps) => {
-
-  const [isLoading, setIsLoading] = useState(true)
-  console.log(isLoading)
 
   const renderMap = useCallback((status: string) => {
     if (status === 'LOADING') {
@@ -125,23 +122,23 @@ const GoogleMap = ({ ...props }: GoogleMapProps) => {
       return (
         <div className="w-full h-80 rounded-lg border border-red-200 shadow-sm flex items-center justify-center bg-red-50">
           <div className="text-center">
-            <p className="text-red-600 font-medium">Error al cargar el mapa</p>
+            <p className="text-red-600 font-medium">❌ Error al cargar el mapa</p>
             <p className="text-red-500 text-sm mt-1">
-              Verifica tu conexión a internet y la API Key
+              Verifica tu API Key y que las APIs estén habilitadas
             </p>
           </div>
         </div>
       )
     }
 
-    setIsLoading(false)
+    // setIsLoading(false)
     return <MapComponent {...props} />
   }, [props])
 
   return (
     <div className="relative">
       <Wrapper
-        apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+        apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
         render={renderMap}
         libraries={['places', 'geometry']}
         language="es"

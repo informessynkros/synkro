@@ -1,17 +1,24 @@
 // Vista almacenes
 
-import { PackagePlus, Truck } from "lucide-react"
+import { Edit, PackagePlus, Truck } from "lucide-react"
 import Table from "../components/ui/table/Table"
 import inventory from '../assets/inventoryData.json'
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { Almacen } from "../schemas/warehouse-schema"
 import useWarehouses from "../hooks/useWarehouses"
 import LoadingErrorHandler from "../components/chargeView/LoadingErrorHandler"
-import useNavigation from "../hooks/useNavigation"
+// import useNavigation from "../hooks/useNavigation"
+import { Drawer } from "vaul"
+import FormInventory from "../components/inventory/FormInventory"
 
 
 const Warehouse = () => {
+
+  // Estados
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  // Selección del almacén
+  const [selectedWarehouse, setSelectedWarehouse] = useState<Almacen | null>(null)
 
   // BEID manual
   const BEID = 'BE001'
@@ -23,7 +30,24 @@ const Warehouse = () => {
     isErrorWare,
     errorWare
   } = useWarehouses(BEID)
-  const { goView } = useNavigation()
+  // const { goView } = useNavigation()
+
+  const handleOpenDrawer = () => {
+    setSelectedWarehouse(null)
+    setIsDrawerOpen(true)
+  }
+
+  const handleClickWarehouse = (warehouse: Almacen) => {
+    if (warehouse) {
+      setSelectedWarehouse(warehouse)
+      setIsDrawerOpen(true)
+    }
+  }
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false)
+    setSelectedWarehouse(null)
+  }
 
   // Números consecutivos
   const numberedInventory = useMemo(() => {
@@ -60,6 +84,21 @@ const Warehouse = () => {
       accessorKey: 'info.tipo_inventario',
       enableColumnFilter: true,
     },
+    {
+      header: 'Acciones',
+      id: 'actions',
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <button
+            className="bg-sky-100 text-sky-700 rounded-md p-1.5 hover:bg-sky-200 hover:shadow duration-300 cursor-pointer"
+            onClick={() => handleClickWarehouse(row.original)}
+            title="Editar"
+          >
+            <Edit size={18} />
+          </button>
+        </div>
+      )
+    },
   ]
 
   const contentWarehouses = (
@@ -73,7 +112,8 @@ const Warehouse = () => {
         enabledButton
         buttonText="Agregar almacén"
         iconButton={PackagePlus}
-        onButtonClick={() => goView('/create-inventory')}
+        // onButtonClick={() => goView('/create-inventory')}}
+        onButtonClick={handleOpenDrawer}
       />
     </>
   )
@@ -88,6 +128,26 @@ const Warehouse = () => {
       >
         {contentWarehouses}
       </LoadingErrorHandler>
+
+      <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 bg-gray-300/40 z-50" />
+          <Drawer.Content className="bg-white flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0 z-50">
+            <div className="p-4 bg-white rounded-t-[10px] flex-1">
+              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
+
+              <div className="w-auto mx-auto">
+                <Drawer.Title className="font-medium mb-4 text-lg">
+                </Drawer.Title>
+                <FormInventory
+                  warehouse={selectedWarehouse!!}
+                  closeDrawer={handleCloseDrawer}
+                />
+              </div>
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
     </div>
   )
 }

@@ -8,11 +8,10 @@ import useMediaQueries from "../../hooks/useMediaQueries"
 import type { RadioOption } from "../ui/button/radioButton/RadioButtonGroup"
 import RadioButtonGroup from "../ui/button/radioButton/RadioButtonGroup"
 import ButtonCustom from "../ui/button/ButtonCustom"
-import useNavigation from "../../hooks/useNavigation"
 import ButtonCustomLoading from "../ui/button/ButtonCustomLoading"
 import LineSeparator from "../ui/lineSeparator/LineSeparator"
 import Section from "../ui/section/Section"
-import type { AlmacenFormData } from "../../schemas/warehouse-schema"
+import type { Almacen, AlmacenFormData } from "../../schemas/warehouse-schema"
 // import Map from "../ui/map/Map"
 import DynamicInputArray from "../ui/input/DynamicInputArray"
 import useWarehouses from "../../hooks/useWarehouses"
@@ -26,11 +25,15 @@ interface AddressData {
   cp: string
 }
 
-const CreateInventory = () => {
+interface DrawerProps {
+  warehouse: Almacen
+  closeDrawer?: () => void
+}
+
+const CreateInventory = ({ warehouse, closeDrawer }: DrawerProps) => {
 
   // Hooks
   const { isDesktop, isTablet, isMobile } = useMediaQueries()
-  const { goBack } = useNavigation()
   const {
     createWarehouse,
     isPendingCreateWh,
@@ -45,26 +48,62 @@ const CreateInventory = () => {
   // const debounceTimeout = useRef<number>(0)
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const defaultValues = useMemo(
-    // Valores del documento
-    () => ({
-      almacenes: {
-        nombre: '',
-        tipo_inventario: 'FISICO' as 'FISICO' | 'VIRTUAL',
-        descripcion: '',
-        operador_logistico: '',
-        ubicacion_interna: [],
-        direccion: {
-          calle: '',
-          municipio: '',
-          cp: '',
-          ciudad: '',
-          estado: ''
+  // const defaultValues = useMemo(() => ({
+  //   // Valores del documento
+  //   almacenes: {
+  //     nombre: '',
+  //     tipo_inventario: 'FISICO' as 'FISICO' | 'VIRTUAL',
+  //     descripcion: '',
+  //     operador_logistico: '',
+  //     ubicacion_interna: [],
+  //     direccion: {
+  //       calle: '',
+  //       municipio: '',
+  //       cp: '',
+  //       ciudad: '',
+  //       estado: ''
+  //     }
+  //   }
+  // }),
+  //   [])
+
+  const defaultValues = useMemo(() => {
+    if (warehouse) {
+      return {
+        almacenes: {
+          nombre: warehouse.info.nombre || '',
+          tipo_inventario: warehouse.info.tipo_inventario || 'FISICO',
+          descripcion: warehouse.info.descripcion || '',
+          operador_logistico: warehouse.info.operador_logistico || '',
+          ubicacion_interna: warehouse.info.ubicacion_interna || [],
+          direccion: {
+            calle: warehouse.info.direccion.calle || '',
+            municipio: warehouse.info.direccion.municipio || '',
+            cp: warehouse.info.direccion.cp || '',
+            ciudad: warehouse.info.direccion.ciudad || '',
+            estado: warehouse.info.direccion.estado || ''
+          }
         }
       }
-    }),
-    []
-  )
+    } else {
+      return {
+        almacenes: {
+          nombre: '',
+          tipo_inventario: 'FISICO' as 'FISICO' | 'VIRTUAL',
+          descripcion: '',
+          operador_logistico: '',
+          ubicacion_interna: [],
+          direccion: {
+            calle: '',
+            municipio: '',
+            cp: '',
+            ciudad: '',
+            estado: ''
+          }
+        }
+      }
+    }
+  }, [])
 
   const { control, handleSubmit, formState: { errors }, watch, setValue } = useForm<AlmacenFormData>({ defaultValues })
 
@@ -245,6 +284,30 @@ const CreateInventory = () => {
     handleMarkerMove(lat, lng)
   }
 
+  // Con esto hacemos geocoding de la dirección completa del alamcén
+  const geocodeFromWarehouseAddress = useCallback(async () => {
+    if (!warehouse?.info?.direccion) return
+
+    const { calle, ciudad, estado, cp } = warehouse.info.direccion
+    const fullAddress = `${calle}, ${ciudad}, ${estado}, ${cp ? cp + ', ' : ''}México`
+
+    const coords = await geocodeAddress(fullAddress)
+    if (coords) {
+      setMapCenter(coords)
+      setMarkerPosition(coords)
+    }
+  }, [warehouse])
+
+  useEffect(() => {
+    if (warehouse) {
+      const timer = setTimeout(() => {
+        geocodeFromWarehouseAddress()
+      }, 1000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [warehouse, geocodeFromWarehouseAddress])
+
   // Envio de información
   const handleDataSubmit = async (formData: AlmacenFormData) => {
     try {
@@ -279,11 +342,12 @@ const CreateInventory = () => {
   return (
     <>
       <Section
-        text="Inventario - Alta almacén"
+        // text="Inventario - Alta almacén"
+        text={`${warehouse ? 'Inventario - Edición almacén' : 'Inventario - Alta almacén'}`}
         icon={Box}
       />
 
-      <div className="bg-white shadow-md p-6 rounded-md mt-6">
+      <div className="shadow-md p-6 rounded-md mt-6">
         <form
           onSubmit={handleSubmit(handleDataSubmit)}
           className={`flex flex-col`}
@@ -530,12 +594,13 @@ const CreateInventory = () => {
             <ButtonCustom
               text="Cancelar"
               icon={CircleX}
-              onClick={goBack}
+              // onClick={goBack}
+              onClick={closeDrawer}
             />
 
             <ButtonCustomLoading
-              text="Crear almacén"
-              loadingText="Creando..."
+              text={`${warehouse ? 'Editar almacén' : 'Crear almacén'}`}
+              loadingText={`${warehouse ? 'Editando...' : 'Creando...'}`}
               isLoading={isPendingCreateWh}
               icon={SaveAll}
               type="submit"
