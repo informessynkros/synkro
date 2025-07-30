@@ -22,8 +22,10 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
   // Refs
   const toastRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
-  const timeoutRef = useRef<number>(0)
-  const intervalRef = useRef<number>(0)
+  // const timeoutRef = useRef<number>(0)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // const intervalRef = useRef<number>(0)
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Configuración de iconos y colores por tipo
   const config = {
@@ -126,7 +128,7 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       intervalRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 100) {
-            clearInterval(intervalRef.current)
+            clearInterval(intervalRef.current!!)
             return 0
           }
           return prev - 100
@@ -159,7 +161,7 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       intervalRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev > 100) {
-            clearInterval(intervalRef.current)
+            clearInterval(intervalRef.current!!)
             return 0
           }
           return prev - 100

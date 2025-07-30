@@ -42,7 +42,8 @@ const CreateInventory = () => {
   const [isUpdatingFromMap, setIsUpdatingFromMap] = useState(false)
 
   // Refs
-  const debounceTimeout = useRef<number>(0)
+  // const debounceTimeout = useRef<number>(0)
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const defaultValues = useMemo(
     // Valores del documento
@@ -86,11 +87,11 @@ const CreateInventory = () => {
         resolve(null)
         return
       }
-  
+
       const geocoder = new google.maps.Geocoder()
-  
+
       geocoder.geocode(
-        { 
+        {
           address: address,
           language: 'es',
           region: 'mx',
@@ -154,45 +155,45 @@ const CreateInventory = () => {
         resolve(null)
         return
       }
-  
+
       const geocoder = new google.maps.Geocoder()
       const latlng = { lat: lat, lng: lng }
-  
+
       geocoder.geocode(
-        { 
+        {
           location: latlng,
           language: 'es',
           region: 'mx'
-        }, 
+        },
         (results, status) => {
           if (status === 'OK' && results && results.length > 0) {
             const result = results[0]
             const components = result.address_components
-  
+
             // Función helper para extraer componentes
             const getComponent = (types: string[]) => {
-              const component = components.find((comp) => 
+              const component = components.find((comp) =>
                 comp.types.some((type) => types.includes(type))
               )
               return component?.long_name || ''
             }
-  
+
             // Extraer información específica para México
             const streetNumber = getComponent(['street_number'])
             const route = getComponent(['route'])
             const calle = streetNumber && route ? `${route} ${streetNumber}` : (route || streetNumber || '')
-  
+
             const addressData: AddressData = {
               calle: calle || getComponent(['premise', 'subpremise']) || '',
-              municipio: getComponent(['sublocality', 'sublocality_level_1']) || 
-                        getComponent(['administrative_area_level_2']) || '',
-              ciudad: getComponent(['locality']) || 
-                     getComponent(['administrative_area_level_2']) || 
-                     getComponent(['sublocality']) || '',
+              municipio: getComponent(['sublocality', 'sublocality_level_1']) ||
+                getComponent(['administrative_area_level_2']) || '',
+              ciudad: getComponent(['locality']) ||
+                getComponent(['administrative_area_level_2']) ||
+                getComponent(['sublocality']) || '',
               estado: getComponent(['administrative_area_level_1']) || '',
               cp: getComponent(['postal_code']) || ''
             }
-  
+
             resolve(addressData)
           } else {
             console.error('Geocoding error:', status)
@@ -209,7 +210,7 @@ const CreateInventory = () => {
     setMarkerPosition([lat, lng])
 
     // Limpiar timeout anterior
-    clearTimeout(debounceTimeout.current)
+    clearTimeout(debounceTimeout.current!!)
 
     // Crear nuevo timeout para geocodificación inversa
     debounceTimeout.current = setTimeout(async () => {
@@ -235,7 +236,7 @@ const CreateInventory = () => {
   // Limpiar timeout al desmontar el componente
   useEffect(() => {
     return () => {
-      clearTimeout(debounceTimeout.current)
+      clearTimeout(debounceTimeout.current!!)
     }
   }, [])
 
