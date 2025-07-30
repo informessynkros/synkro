@@ -5,7 +5,6 @@ import type { ComponentType } from "react"
 import Dashboard from "../../views/home/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
-import CreateInventory from "../../components/inventory/FormInventory"
 import ChargeInventory from "../../components/inventory/ChargeInventory"
 import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
@@ -71,14 +70,14 @@ export const routesDashboard: RouteConfig[] = [
     component: Warehouse,
     showInSidebar: true,
   },
-  { // Crear almacén
-    key: 'create-inventory',
-    path: '/create-inventory',
-    name: 'Crear almacén',
-    icon: LayoutDashboard,
-    component: CreateInventory,
-    showInSidebar: false,
-  },
+  // { // Crear almacén
+  //   key: 'create-inventory',
+  //   path: '/create-inventory',
+  //   name: 'Crear almacén',
+  //   icon: LayoutDashboard,
+  //   component: CreateInventory,
+  //   showInSidebar: false,
+  // },
   { // Cargar de inventario
     key: 'charge-inventory',
     path: '/charge-inventory',
