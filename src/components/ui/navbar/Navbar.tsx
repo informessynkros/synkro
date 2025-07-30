@@ -3,10 +3,11 @@
 import gsap from "gsap"
 import { Menu, Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-import InputSearch from "../input/InputSearch"
+// import InputSearch from "../input/InputSearch"
 import MenuProfile from "../menu/MenuProfile"
 import ButtonNotification from "../button/notifications/ButtonNotification"
 import useMediaQueries from "../../../hooks/useMediaQueries"
+import AlgoliaSearch from "../search/AlgoliaSearch"
 
 
 interface NavbarProps {
@@ -137,11 +138,21 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             </div>
           </div>
 
-          <div className="flex-1 max-w-md mx-8">
-            <InputSearch />
-          </div>
+          {/* <div className="flex-1 max-w-md mx-8"> */}
+          {/* <div className="flex-1 max-w-max mx-8">
+            <AlgoliaSearch
+              onClose={() => setSearchOpen(false)}
+            />
+          </div> */}
 
           <div className="flex items-center space-x-4">
+            <div className="flex-1 max-w-max mx-8">
+              <AlgoliaSearch
+                onClose={() => setSearchOpen(false)}
+              />
+              {/* <InputSearch /> */}
+            </div>
+
             <div className="relative" ref={notificationsRef}>
               <ButtonNotification
                 notificationsOpen={notificationsOpen}
@@ -206,7 +217,10 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             ref={searchMobileRef}
             className="bg-white border-b border-gray-200 px-4 py-3 animate-fadeIn"
           >
-            <InputSearch />
+            {/* <InputSearch /> */}
+            <AlgoliaSearch
+              onClose={() => setSearchOpen(false)}
+            />
           </div>
         )}
       </>
@@ -237,8 +251,11 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
           </div>
 
           <div className="flex items-center space-x-3">
-            <div className="w-64">
-              <InputSearch />
+            <div className="max-w-max">
+              {/* <InputSearch /> */}
+              <AlgoliaSearch
+                onClose={() => setSearchOpen(false)}
+              />
             </div>
 
             <div className="relative" ref={notificationsRef}>
