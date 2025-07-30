@@ -5,7 +5,6 @@ import Card from "../../components/ui/card/Card"
 import useMediaQueries from "../../hooks/useMediaQueries"
 import CustomLineChart from "../../components/ui/graphics/LineChart"
 import CustomDonutChart from "../../components/ui/graphics/DonutCahart"
-import Toast from "../../components/ui/toast/Toast"
 
 
 const Dashboard = () => {
@@ -89,13 +88,6 @@ const Dashboard = () => {
           title="Recargas"
         />
       </div>
-
-      <Toast
-        type="info"
-        title="Info"
-        message="Mostrando alerta ejemplar"
-      // duration={}
-      />
     </>
   )
 }
