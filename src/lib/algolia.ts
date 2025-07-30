@@ -25,7 +25,7 @@ export interface SearchableItem extends Record<string, unknown> {
   description?: string
   category?: string
   url?: string
-  type?: 'modulo' | 'action' | 'user' | 'help'
+  type?: string
   keywords: string[]
   available: boolean
   priority: number
