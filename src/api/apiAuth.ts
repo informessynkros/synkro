@@ -9,7 +9,7 @@ import api from "../utils/axios"
 // Login
 export const authenticationUser = async (authData: AuthDataProps) => {
   try {
-    const { data } = await api.post('/login', authData)
+    const data = await api.post('/login', authData)
     return data
   } catch (error) {
     handleApiError(error)

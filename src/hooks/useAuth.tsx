@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import { activateAccount, authenticationUser } from "../api/apiAuth"
 import { useDispatch } from "react-redux"
 import { useToast } from "../context/ToastContext"
-import { setCredentials } from "../helpers/redux/AuthSlice"
+import { getCheckpoint, setCredentials } from "../helpers/redux/AuthSlice"
 import useNavigation from "./useNavigation"
 
 
@@ -31,9 +31,18 @@ const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: authenticationUser,
     onSuccess: data => {
-      console.log('Data', data)
-      showToast({ type: 'success', title: 'Éxito', message: data.message })
-      dispath(setCredentials(data))
+      if (data?.status === 201) {
+        dispath(getCheckpoint({ checkpoint: data?.data.checkpoint }))
+        goView('/auth/active-account')
+      }
+
+      const dataLogin = {
+        user: data?.data.user,
+        token: data?.data.token
+      }
+      dispath(setCredentials(dataLogin))
+
+      showToast({ type: 'success', title: 'Éxito', message: data?.data.message })
     },
     onError: error => {
       const mess = JSON.parse(error.message)
