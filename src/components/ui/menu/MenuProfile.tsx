@@ -1,11 +1,12 @@
 // Componente del perfil de usuario
 
 import { ChevronDown, LogOut, Settings, User } from "lucide-react"
-import MenuItem from "./MenuItem"
+import { MenuItem, MenuItemButton } from "./MenuItem"
 import LineSeparator from "../lineSeparator/LineSeparator"
 import { forwardRef, useEffect, useRef } from "react"
 import gsap from "gsap"
 import useMediaQueries from "../../../hooks/useMediaQueries"
+import useAuth from "../../../hooks/useAuth"
 
 
 interface MenuProfileProps {
@@ -18,6 +19,7 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
 
     // Hook
     const { isMobile, isTablet } = useMediaQueries()
+    const { logoutUser } = useAuth()
 
     // Refs
     const dropdownRef = useRef<HTMLDivElement>(null)
@@ -48,6 +50,10 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
       } else {
         setProfileOpen()
       }
+    }
+
+    const logout = () => {
+      logoutUser()
     }
 
     return (
@@ -96,7 +102,7 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
             <MenuItem icon={User} text="Mi perfil" onClick={handleCloseWithAnimation} />
             <MenuItem icon={Settings} text="Configuración" onClick={handleCloseWithAnimation} />
             <LineSeparator />
-            <MenuItem icon={LogOut} text="Cerrar Sesión" onClick={handleCloseWithAnimation} />
+            <MenuItemButton icon={LogOut} text="Cerrar Sesión" onClick={logout} />
           </div>
         )}
       </div>

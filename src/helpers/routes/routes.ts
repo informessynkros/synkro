@@ -1,6 +1,6 @@
 // Rutas
 
-import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon } from "lucide-react"
+import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2 } from "lucide-react"
 import type { ComponentType } from "react"
 import Dashboard from "../../views/home/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
@@ -8,6 +8,7 @@ import CRM from "../../views/home/CRM"
 import ChargeInventory from "../../components/inventory/ChargeInventory"
 import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
+import Users from "../../views/Users"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -85,5 +86,13 @@ export const routesDashboard: RouteConfig[] = [
     icon: LayoutDashboard,
     component: ChargeInventory,
     showInSidebar: false,
+  },
+  { // Usuarios
+    key: 'users',
+    path: '/users',
+    name: 'Usuarios',
+    icon: Users2,
+    component: Users,
+    showInSidebar: true,
   },
 ]

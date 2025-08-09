@@ -12,7 +12,15 @@ interface MenuItemProps {
   onClick?: () => void
 }
 
-const MenuItem = ({
+interface MenuItemButtonProps {
+  icon: LucideIcon
+  text: string
+  colorText?: string
+  hoverBgColor?: string
+  onClick?: () => void
+}
+
+export const MenuItem = ({
   icon: Icon,
   href = '#',
   text,
@@ -34,4 +42,22 @@ const MenuItem = ({
   )
 }
 
-export default MenuItem
+export const MenuItemButton = ({
+  icon: Icon,
+  text,
+  colorText = 'text-gray-700',
+  hoverBgColor = 'hover:bg-gray-100',
+  onClick
+}: MenuItemButtonProps) => {
+  return (
+    <button
+      className={`w-full px-4 py-2 text-sm ${colorText} ${hoverBgColor} transition-colors duration-200`}
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-3">
+        <Icon className="w-5 h-5" />
+        <span>{text}</span>
+      </div>
+    </button>
+  )
+}
