@@ -57,7 +57,6 @@ const MessageToasty = forwardRef<HTMLInputElement, MessageToastyProps>(
           error={error}
           ref={ref as any}
           onFileSelect={onFileSelect}
-          type={type}
           {...props}
         />
 

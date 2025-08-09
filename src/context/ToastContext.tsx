@@ -9,6 +9,7 @@ interface ToastData {
   type: 'success' | 'info' | 'warning' | 'error'
   title: string
   message: string
+  others?: string
   duration?: number
 }
 
@@ -72,6 +73,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
               type={toast.type}
               title={toast.title}
               message={toast.message}
+              others={toast.others}
               duration={toast.duration}
               onClose={() => removeToast(toast.id)}
             />
