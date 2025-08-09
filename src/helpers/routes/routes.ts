@@ -24,7 +24,7 @@ export interface RouteConfig {
 export const routesDashboard: RouteConfig[] = [
   { // Dashboard
     key: 'dashboard',
-    path: '/',
+    path: '/dashboard',
     name: 'Dashboard',
     icon: LayoutDashboard,
     component: Dashboard,

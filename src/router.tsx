@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { routesDashboard, type RouteConfig } from "./helpers/routes/routes"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import DashboardLayout from "./layouts/DashboardLayout"
 import AuthLayout from "./layouts/AuthLayout"
 import Login from "./views/auth/Login"
@@ -9,15 +9,14 @@ import NotFound from "./views/error/404"
 import 'leaflet/dist/leaflet.css'
 import { ToastProvider } from "./context/ToastContext"
 import ProtectedRoute from "./helpers/auth/ProtectedRoute"
-import { useSelector } from "react-redux"
 import AppLayout from "./layouts/AppLayout"
 import Home from "./views/Home"
 import ActivateAccount from "./views/auth/ActivateAccount"
+import PublicRoute from "./helpers/auth/PublicRoute"
 
 function Router() {
 
   // Uso de isAtuhtenticated
-  const isAuthenticated = useSelector((state: any) => state.authUser.isAtuhtenticated)
 
   // Función que genera las rutas
   const generateRoutes = (routes: RouteConfig[]): ReactNode => {
@@ -49,10 +48,6 @@ function Router() {
 
           <Route element={<AppLayout />}>
             <Route path='/' element={<Home />} index />
-            <Route
-              path='/auth/login'
-              element={isAuthenticated ? <Navigate to='/dashboard' replace /> : <Login />}
-            />
           </Route>
 
           <Route element={<ProtectedRoute />}>
@@ -61,10 +56,12 @@ function Router() {
             </Route>
           </Route>
 
-          <Route element={<AuthLayout />}>
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route path='/auth/active-account' element={<ActivateAccount />} />
+          <Route element={<PublicRoute />}>
+            <Route element={<AuthLayout />}>
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+              <Route path='/auth/active-account' element={<ActivateAccount />} />
+            </Route>
           </Route>
 
           {/* Not found */}

@@ -18,3 +18,7 @@ export interface ActivateAccountApiProps { // Este schema es el que enviamos al 
   temp_password: string
   new_password: string
 }
+
+export interface VerifyFomrData {
+  confirmationCode: string
+}

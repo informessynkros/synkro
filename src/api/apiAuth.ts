@@ -28,4 +28,49 @@ export const activateAccount = async (accountData: ActivateAccountApiProps) => {
 }
 
 
+// Setup MFA
+export const setupMFA = async (token: string) => {
+  try {
+    const { data } = await api.post('/setup-mfa', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    return data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+
+// Verificar MFA
+export const verifyMFA = async ({ token, code }: { token: string, code: string }) => {
+  try {
+    const { data } = await api.post('/verify-mfa', { codigo: code }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    return data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+
+// Verificar inicio de sesión con MFA
+export const verifyLoginMFA = async ({ mfa_token, code }: { mfa_token: string, code: string }) => {
+  try {
+    const { data } = await api.post('/verify-login-mfa', { codigo: code, mfa_token: mfa_token }, {
+      headers: {
+        Authorization: `Bearer ${mfa_token}`
+      }
+    })
+    return data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+
 // ------------------------- MFA -------------------------
