@@ -50,8 +50,8 @@ const authSlice = createSlice({
   reducers: { // Funciones
     setCredentials: (state, action: PayloadAction<{ user: any, token: any }>) => {
       const { token, user } = action.payload
-      state.user = { user }
-      state.token = { token }
+      state.user = user
+      state.token = token
       state.isAuthenticated = true
       saveAuthState(state)
     },
