@@ -9,11 +9,12 @@ interface ToastProps {
   type: 'success' | 'info' | 'warning' | 'error'
   title: string
   message: string
+  others?: string
   duration?: number
   onClose?: () => void
 }
 
-const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) => {
+const Toast = ({ type, title, message, others, duration = 4000, onClose }: ToastProps) => {
 
   // Estados
   const [isVisible, setIsVisible] = useState(true) // Mostrar tostada
@@ -34,7 +35,6 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       bgColor: 'bg-white',
       iconColor: 'text-emerald-600',
       titleColor: 'text-emerald-800',
-      messageColor: 'text-emerald-700',
       progressColor: 'bg-emerald-500',
       hoverClose: 'hover:bg-emerald-100'
     },
@@ -43,7 +43,6 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       bgColor: 'bg-white',
       iconColor: 'text-red-600',
       titleColor: 'text-red-800',
-      messageColor: 'text-red-700',
       progressColor: 'bg-red-500',
       hoverClose: 'hover:bg-red-100'
     },
@@ -52,7 +51,6 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       bgColor: 'bg-white',
       iconColor: 'text-yellow-600',
       titleColor: 'text-yellow-800',
-      messageColor: 'text-yellow-700',
       progressColor: 'bg-yellow-500',
       hoverClose: 'hover:bg-yellow-100'
     },
@@ -61,7 +59,6 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
       bgColor: 'bg-white',
       iconColor: 'text-sky-600',
       titleColor: 'text-sky-800',
-      messageColor: 'text-sky-700',
       progressColor: 'bg-sky-500',
       hoverClose: 'hover:bg-sky-100'
     },
@@ -247,12 +244,17 @@ const Toast = ({ type, title, message, duration = 4000, onClose }: ToastProps) =
         </div>
 
         <div className="flex-1 min-w-0">
-          <h4 className={`font-semibold text-sm ${currentConfig.titleColor} leading-tight`}>
+          <h4 className={`font-semibold text-sm text-gray-700 leading-tight`}>
             {title}
           </h4>
           {message && (
-            <p className={`text-sm ${currentConfig.messageColor} mt-1 leading-relaxed`}>
+            <p className={`text-sm text-gray-700 mt-1 leading-relaxed`}>
               {message}
+            </p>
+          )}
+          {others && (
+            <p className={`text-sm text-gray-500 mt-1 leading-relaxed`}>
+              {others}
             </p>
           )}
         </div>

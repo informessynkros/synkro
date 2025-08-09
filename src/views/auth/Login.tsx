@@ -1,23 +1,30 @@
 // Vista de autenticacion
 
 import { Controller, useForm } from "react-hook-form"
-import type { AuthProps } from "../../schemas/auth-schema"
+import type { AuthDataProps } from "../../schemas/auth-schema"
 import MessageToasty from "../../components/ui/messages/MessageToasty"
 import { LockIcon, LogIn, Package, Truck } from "lucide-react"
 import ButtonCustomLoading from "../../components/ui/button/ButtonCustomLoading"
+import useAuth from "../../hooks/useAuth"
 
 
 const Login = () => {
 
-  const { control, handleSubmit, formState: { errors } } = useForm<AuthProps>()
+  // Hook
+  const {
+    login,
+    isPendingLogin,
+  } = useAuth()
+
+  const { control, handleSubmit, formState: { errors } } = useForm<AuthDataProps>()
 
   // Envío de información
-  const handleDataAuth = async (formData: AuthProps) => {
+  const handleDataAuth = async (formData: AuthDataProps) => {
     const data = {
-      mail: formData.mail,
-      checkpoint: formData.checkpoint
+      checkpoint: formData.checkpoint,
+      cipher: formData.cipher
     }
-    console.log('Data envíada al backend: ', data)
+    await login(data)
   }
 
   return (
@@ -37,9 +44,9 @@ const Login = () => {
               </div>
 
               <div className="bg-white py-8 px-6 shadow-lg rounded-xl border border-gray-200">
-                <div onSubmit={handleSubmit(handleDataAuth)} className="space-y-6">
+                <form onSubmit={handleSubmit(handleDataAuth)} className="space-y-6">
                   <Controller
-                    name="mail"
+                    name="checkpoint"
                     control={control}
                     rules={{ required: 'Coloca un correo electrónico' }}
                     render={({ field }) => (
@@ -48,14 +55,14 @@ const Login = () => {
                         type="email"
                         placeholder="example@gmail.com"
                         icon={LogIn}
-                        error={errors.mail?.message}
+                        error={errors.checkpoint?.message}
                         {...field}
                       />
                     )}
                   />
 
                   <Controller
-                    name="checkpoint"
+                    name="cipher"
                     control={control}
                     rules={{
                       required: "La contraseña no puede ir vacía",
@@ -70,7 +77,7 @@ const Login = () => {
                         type="password"
                         placeholder="********"
                         icon={LockIcon}
-                        error={errors.checkpoint?.message}
+                        error={errors.cipher?.message}
                         {...field}
                       />
                     )}
@@ -90,9 +97,9 @@ const Login = () => {
                     icon={LogIn}
                     loadingText="Iniciando sesión..."
                     type="submit"
-                    isLoading={false}
+                    isLoading={isPendingLogin}
                   />
-                </div>
+                </form>
               </div>
             </div>
           </div>
