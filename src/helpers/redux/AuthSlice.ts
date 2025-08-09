@@ -58,6 +58,7 @@ const authSlice = createSlice({
     getCheckpoint: (state, action: PayloadAction<{ checkpoint: string }>) => {
       const { checkpoint } = action.payload
       state.user = { checkpoint }
+      state.token = null
       state.isAuthenticated = false
       saveAuthState(state)
     }
