@@ -73,6 +73,7 @@ const ActivateAccount = () => {
                         type="email"
                         placeholder="example@gmail.com"
                         icon={MailOpen}
+                        disabled
                         error={errors.email?.message}
                         {...field}
                       />

@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 interface AuthStateProps {
   user: any | null
-  token: string | null
+  token: any | null
   isAuthenticated: boolean
 }
 
@@ -48,16 +48,22 @@ const authSlice = createSlice({
   name: 'authUser',
   initialState,
   reducers: { // Funciones
-    setCredentials: (state, action: PayloadAction<{ user: any, token: string }>) => {
+    setCredentials: (state, action: PayloadAction<{ user: any, token: any }>) => {
       const { token, user } = action.payload
-      state.user = user
-      state.token = token
+      state.user = { user }
+      state.token = { token }
       state.isAuthenticated = true
+      saveAuthState(state)
+    },
+    getCheckpoint: (state, action: PayloadAction<{ checkpoint: string }>) => {
+      const { checkpoint } = action.payload
+      state.user = { checkpoint }
+      state.isAuthenticated = false
       saveAuthState(state)
     }
   }
 })
 
 
-export const { setCredentials } = authSlice.actions
+export const { setCredentials, getCheckpoint } = authSlice.actions
 export default authSlice.reducer
