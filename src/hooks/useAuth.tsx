@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import { activateAccount, authenticationUser, setupMFA, verifyLoginMFA, verifyMFA } from "../api/apiAuth"
 import { useDispatch } from "react-redux"
 import { useToast } from "../context/ToastContext"
-import { clearMfaToken, getCheckpoint, setCredentials, setMfaToken } from "../helpers/redux/AuthSlice"
+import { cleanCredentials, clearMfaToken, getCheckpoint, setCredentials, setMfaToken } from "../helpers/redux/AuthSlice"
 import useNavigation from "./useNavigation"
 
 
@@ -104,6 +104,12 @@ const useAuth = () => {
     },
   })
 
+  // Cierre de sesión
+  const logoutUser = () => {
+    dispath(cleanCredentials())
+    showToast({ type: 'info', title: 'Sesión', message: 'Sesión cerrada con éxito' })
+  }
+
   return {
 
     // Activación de cuenta
@@ -139,6 +145,8 @@ const useAuth = () => {
     isErrorLogin: loginMutation.isError,
     errorLogin: loginMutation.error,
     loginMutation, // Con la finalidad de obtener el estado del response
+
+    logoutUser
   }
 }
 

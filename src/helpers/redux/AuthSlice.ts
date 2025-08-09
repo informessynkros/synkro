@@ -74,10 +74,17 @@ const authSlice = createSlice({
     clearMfaToken: (state) => {
       state.mfaToken = null
       saveAuthState(state)
+    },
+    cleanCredentials: state => {
+      state.user = null
+      state.mfaToken = null
+      state.mfaToken = null
+      state.isAuthenticated = false
+      localStorage.removeItem('authUser')
     }
   }
 })
 
 
-export const { setCredentials, getCheckpoint, setMfaToken, clearMfaToken } = authSlice.actions
+export const { setCredentials, getCheckpoint, setMfaToken, clearMfaToken, cleanCredentials } = authSlice.actions
 export default authSlice.reducer
