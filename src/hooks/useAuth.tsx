@@ -34,14 +34,13 @@ const useAuth = () => {
       if (data?.status === 201) {
         dispath(getCheckpoint({ checkpoint: data?.data.checkpoint }))
         goView('/auth/active-account')
+      } else {
+        const dataLogin = {
+          user: data?.data.user,
+          token: data?.data.token
+        }
+        dispath(setCredentials(dataLogin))
       }
-
-      const dataLogin = {
-        user: data?.data.user,
-        token: data?.data.token
-      }
-      dispath(setCredentials(dataLogin))
-
       showToast({ type: 'success', title: 'Éxito', message: data?.data.message })
     },
     onError: error => {
