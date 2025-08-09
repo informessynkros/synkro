@@ -4,6 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 interface AuthStateProps {
   user: any | null
   token: any | null
+  mfaToken: string | null
   isAuthenticated: boolean
 }
 
@@ -14,6 +15,7 @@ const loadAuthState = (): AuthStateProps => {
       return {
         user: null,
         token: null,
+        mfaToken: null,
         isAuthenticated: false
       }
     }
@@ -22,6 +24,7 @@ const loadAuthState = (): AuthStateProps => {
     return {
       user: null,
       token: null,
+      mfaToken: null,
       isAuthenticated: false
     }
   }
@@ -41,6 +44,7 @@ const saveAuthState = (state: any) => {
 const initialState = loadAuthState() || {
   user: null,
   token: null,
+  mfaToken: null,
   isAuthenticated: false
 }
 
@@ -61,10 +65,19 @@ const authSlice = createSlice({
       state.token = null
       state.isAuthenticated = false
       saveAuthState(state)
+    },
+    setMfaToken: (state, action: PayloadAction<{ mfa_token: string | null }>) => {
+      const { mfa_token } = action.payload
+      state.mfaToken = mfa_token
+      saveAuthState(state)
+    },
+    clearMfaToken: (state) => {
+      state.mfaToken = null
+      saveAuthState(state)
     }
   }
 })
 
 
-export const { setCredentials, getCheckpoint } = authSlice.actions
+export const { setCredentials, getCheckpoint, setMfaToken, clearMfaToken } = authSlice.actions
 export default authSlice.reducer
