@@ -16,6 +16,7 @@ import type { Almacen, AlmacenFormData } from "../../schemas/warehouse-schema"
 import DynamicInputArray from "../ui/input/DynamicInputArray"
 import useWarehouses from "../../hooks/useWarehouses"
 import GoogleMap from "../ui/map/GoogleMap"
+import { useSelector } from "react-redux"
 
 interface AddressData {
   calle: string
@@ -25,19 +26,23 @@ interface AddressData {
   cp: string
 }
 
-interface DrawerProps {
+interface FormInventory {
   warehouse: Almacen
   closeDrawer?: () => void
 }
 
-const CreateInventory = ({ warehouse, closeDrawer }: DrawerProps) => {
+const CreateInventory = ({ warehouse, closeDrawer }: FormInventory) => {
+
+  const { user } = useSelector((state: any) => state.authUser)
 
   // Hooks
   const { isDesktop, isTablet, isMobile } = useMediaQueries()
   const {
     createWarehouse,
     isPendingCreateWh,
-  } = useWarehouses('BE001')
+    isSuccessCreateWh,
+    isErrorCreateWh
+  } = useWarehouses(user.be_id)
 
   // Estados
   const [mapCenter, setMapCenter] = useState<[number, number]>([19.4326, -99.1332])
@@ -47,25 +52,6 @@ const CreateInventory = ({ warehouse, closeDrawer }: DrawerProps) => {
   // Refs
   // const debounceTimeout = useRef<number>(0)
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // const defaultValues = useMemo(() => ({
-  //   // Valores del documento
-  //   almacenes: {
-  //     nombre: '',
-  //     tipo_inventario: 'FISICO' as 'FISICO' | 'VIRTUAL',
-  //     descripcion: '',
-  //     operador_logistico: '',
-  //     ubicacion_interna: [],
-  //     direccion: {
-  //       calle: '',
-  //       municipio: '',
-  //       cp: '',
-  //       ciudad: '',
-  //       estado: ''
-  //     }
-  //   }
-  // }),
-  //   [])
 
   const defaultValues = useMemo(() => {
     if (warehouse) {
@@ -338,6 +324,12 @@ const CreateInventory = ({ warehouse, closeDrawer }: DrawerProps) => {
       console.error('Error:', error)
     }
   }
+
+  useEffect(() => {
+    if (isSuccessCreateWh && !isErrorCreateWh) {
+      closeDrawer?.()
+    }
+  }, [isSuccessCreateWh, isErrorCreateWh, closeDrawer])
 
   return (
     <>

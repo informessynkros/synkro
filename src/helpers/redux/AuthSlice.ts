@@ -6,6 +6,8 @@ interface AuthStateProps {
   token: any | null
   mfaToken: string | null
   isAuthenticated: boolean
+  showMfaSetupModal: boolean
+  showMfaVerifyModal: boolean
 }
 
 const loadAuthState = (): AuthStateProps => {
@@ -16,7 +18,9 @@ const loadAuthState = (): AuthStateProps => {
         user: null,
         token: null,
         mfaToken: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        showMfaSetupModal: false,
+        showMfaVerifyModal: false
       }
     }
     return JSON.parse(serializedAuth)
@@ -25,7 +29,9 @@ const loadAuthState = (): AuthStateProps => {
       user: null,
       token: null,
       mfaToken: null,
-      isAuthenticated: false
+      isAuthenticated: false,
+      showMfaSetupModal: false,
+      showMfaVerifyModal: false
     }
   }
 }
@@ -45,7 +51,9 @@ const initialState = loadAuthState() || {
   user: null,
   token: null,
   mfaToken: null,
-  isAuthenticated: false
+  isAuthenticated: false,
+  showMfaSetupModal: false,
+  showMfaVerifyModal: false
 }
 
 const authSlice = createSlice({
@@ -59,6 +67,14 @@ const authSlice = createSlice({
       state.isAuthenticated = true
       saveAuthState(state)
     },
+    setMfaSetupRequired: (state, action: PayloadAction<{ user: any, token: any }>) => {
+      const { token, user } = action.payload
+      state.user = user
+      state.token = token
+      state.isAuthenticated = false
+      state.showMfaSetupModal = true
+      saveAuthState(state)
+    },
     getCheckpoint: (state, action: PayloadAction<{ checkpoint: string }>) => {
       const { checkpoint } = action.payload
       state.user = { checkpoint }
@@ -69,10 +85,25 @@ const authSlice = createSlice({
     setMfaToken: (state, action: PayloadAction<{ mfa_token: string | null }>) => {
       const { mfa_token } = action.payload
       state.mfaToken = mfa_token
+      state.showMfaVerifyModal = true
       saveAuthState(state)
     },
-    clearMfaToken: (state) => {
+    completeMfaSetup: state => {
+      state.isAuthenticated = true
+      state.showMfaSetupModal = false
+      saveAuthState(state)
+    },
+    closeMfaSetupModal: state => {
+      state.showMfaSetupModal = false
+      saveAuthState(state)
+    },
+    closeMfaVerifyModal: state => {
+      state.showMfaVerifyModal = false
+      saveAuthState(state)
+    },
+    clearMfaToken: state => {
       state.mfaToken = null
+      state.showMfaVerifyModal = false
       saveAuthState(state)
     },
     cleanCredentials: state => {
@@ -80,11 +111,23 @@ const authSlice = createSlice({
       state.mfaToken = null
       state.mfaToken = null
       state.isAuthenticated = false
+      state.showMfaSetupModal = false
+      state.showMfaVerifyModal = false
       localStorage.removeItem('authUser')
     }
   }
 })
 
+export const {
+  setCredentials,
+  getCheckpoint,
+  setMfaToken,
+  clearMfaToken,
+  cleanCredentials,
+  setMfaSetupRequired,
+  closeMfaSetupModal,
+  closeMfaVerifyModal,
+  completeMfaSetup
+} = authSlice.actions
 
-export const { setCredentials, getCheckpoint, setMfaToken, clearMfaToken, cleanCredentials } = authSlice.actions
 export default authSlice.reducer

@@ -11,17 +11,12 @@ import LoadingErrorHandler from "../components/chargeView/LoadingErrorHandler"
 // import useNavigation from "../hooks/useNavigation"
 import { Drawer } from "vaul"
 import FormInventory from "../components/inventory/FormInventory"
+import { useSelector } from "react-redux"
 
 
 const Warehouse = () => {
-
-  // Estados
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  // Selección del almacén
-  const [selectedWarehouse, setSelectedWarehouse] = useState<Almacen | null>(null)
-
   // BEID manual
-  const BEID = 'BE001'
+  const { user } = useSelector((state: any) => state.authUser)
 
   // Hook
   const {
@@ -29,7 +24,13 @@ const Warehouse = () => {
     isLoadingWare,
     isErrorWare,
     errorWare
-  } = useWarehouses(BEID)
+  } = useWarehouses(user.be_id)
+
+  // Estados
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  // Selección del almacén
+  const [selectedWarehouse, setSelectedWarehouse] = useState<Almacen | null>(null)
+
   // const { goView } = useNavigation()
 
   const handleOpenDrawer = () => {
@@ -131,7 +132,7 @@ const Warehouse = () => {
 
       <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 bg-gray-300/40 z-50" />
+          <Drawer.Overlay className="fixed inset-0 bg-gray-300/40 z-30" />
           <Drawer.Content className="bg-white flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0 z-50">
             <div className="p-4 bg-white rounded-t-[10px] flex-1 overflow-y-auto">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />

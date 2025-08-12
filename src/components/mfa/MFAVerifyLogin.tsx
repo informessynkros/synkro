@@ -88,10 +88,11 @@ const MFAVerifyLogin = ({ onComplete }: MFAVerifyLoginProps) => {
 
         {/* Botón de verificar */}
         <ButtonCustomLoading
-          text="Iniciar sesión"
+          text="Acceder"
           icon={BadgeCheck}
           isLoading={isPendingVerifyLoginMFA}
-          loadingText="Verificando..."
+          loadingText="Accediendo..."
+          large="w-auto"
           type="submit"
         />
       </form>

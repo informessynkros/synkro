@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import { activateAccount, authenticationUser, setupMFA, verifyLoginMFA, verifyMFA } from "../api/apiAuth"
 import { useDispatch } from "react-redux"
 import { useToast } from "../context/ToastContext"
-import { cleanCredentials, clearMfaToken, getCheckpoint, setCredentials, setMfaToken } from "../helpers/redux/AuthSlice"
+import { cleanCredentials, clearMfaToken, completeMfaSetup, getCheckpoint, setCredentials, setMfaSetupRequired, setMfaToken } from "../helpers/redux/AuthSlice"
 import useNavigation from "./useNavigation"
 
 
@@ -45,6 +45,10 @@ const useAuth = () => {
     mutationFn: verifyMFA,
     onSuccess: data => {
       showToast({ type: 'success', title: 'Éxito', message: data.message })
+      if (data.mfa_enabled || data.setup_complete) {
+        dispath(completeMfaSetup())
+        goView('/dashboard')
+      }
     },
     onError: error => {
       const mess = JSON.parse(error.message)
@@ -85,7 +89,8 @@ const useAuth = () => {
           user: data?.data.user,
           token: data?.data.token
         }
-        dispath(setCredentials(dataLogin))
+        // dispath(setCredentials(dataLogin))
+        dispath(setMfaSetupRequired(dataLogin))
       } else if (data?.data.mfa_required) { // Si el usuario tiene habilitado el MFA, pedir código
         dispath(setMfaToken({ mfa_token: data?.data.mfa_token }))
       } else { // Login normal sin MFA

@@ -60,13 +60,13 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       {children}
 
       {/* Render de todos los toasts */}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
+      <div className="fixed top-4 right-4 z-[100] space-y-2">
         {toasts.map((toast, index) => (
           <div
             key={toast.id}
             style={{
               transform: `translateY(${index * 10}px)`,
-              zIndex: 50 - index
+              zIndex: 100 - index
             }}
           >
             <Toast

@@ -14,6 +14,7 @@ interface FilterSelectProps<T extends Option> {
   onSelect: (selected: T | T[] | null) => void
   initialValue?: T | T[] | null
   disabled?: boolean
+  required?: boolean
   placeholder?: string
   labelKey?: keyof T
   label?: string
@@ -30,6 +31,7 @@ function SelectMultiple<T extends Option>({
   onSelect,
   initialValue = null,
   disabled = false,
+  required = false,
   placeholder = "Seleccionar",
   labelKey = "name" as keyof T,
   label,
@@ -257,6 +259,7 @@ function SelectMultiple<T extends Option>({
       <div>
         <label htmlFor={String(labelKey)} className="text-sm font-medium text-gray-700">
           {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       </div>
 
