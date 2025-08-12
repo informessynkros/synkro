@@ -1,20 +1,8 @@
-// Endpoints
+// Endpoints de almacenes
 
 import { handleApiError } from "../helpers/errorHandler"
 import type { AlmacenFormData } from "../schemas/warehouse-schema"
 import api from "../utils/axios"
-
-// ------------------------- Usuarios -------------------------
-
-// - Obtencion de usuarios
-export const getUsers = async () => {
-  try {
-    const { data } = await api.get('/get-users')
-    return data.users
-  } catch (error) {
-    handleApiError(error)
-  }
-}
 
 
 // ------------------------- Almacen -------------------------

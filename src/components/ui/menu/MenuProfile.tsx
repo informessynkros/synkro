@@ -12,10 +12,11 @@ import useAuth from "../../../hooks/useAuth"
 interface MenuProfileProps {
   profileOpen: boolean
   setProfileOpen: () => void
+  userName?: string
 }
 
 const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
-  ({ profileOpen, setProfileOpen }, ref) => {
+  ({ profileOpen, setProfileOpen, userName }, ref) => {
 
     // Hook
     const { isMobile, isTablet } = useMediaQueries()
@@ -56,6 +57,36 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
       logoutUser()
     }
 
+    const getDisplayName = (fullName: string) => {
+      if (!fullName) return ''
+
+      const names = fullName.split(' ')
+
+      if (isTablet && names.length >= 2) {
+        return `${names[0]} ${names[1].charAt(0)}.`
+      } else if (isMobile && names.length >= 1) {
+        return names[0]
+      }
+
+      return fullName
+    }
+
+    // Función para obtener iniciales
+    const getInitials = (fullName: string) => {
+      if (!fullName) return 'U' // Usuario por defecto
+
+      const names = fullName.trim().split(' ').filter(name => name.length > 0)
+
+      if (names.length === 0) return 'U'
+      if (names.length === 1) return names[0].charAt(0).toUpperCase()
+
+      // Tomar primera letra del primer nombre y primera letra del último nombre
+      const firstInitial = names[0].charAt(0).toUpperCase()
+      const lastInitial = names[names.length - 1].charAt(0).toUpperCase()
+
+      return `${firstInitial}${lastInitial}`
+    }
+
     return (
       <div ref={ref} className="relative">
         <button
@@ -67,18 +98,18 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
           `}
         >
           <div className={`
-            bg-gradient-to-br from-blue-500 to-purple-600 rounded-full 
+            bg-[#202123] rounded-full 
             flex items-center justify-center
             ${isMobile ? 'w-7 h-7' : 'w-8 h-8'}
           `}>
             <span className={`text-white font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
-              JP
+              {getInitials(userName || '')}
             </span>
           </div>
 
           {!isMobile && (
-            <span className="text-sm font-medium text-gray-900">
-              {isTablet ? 'Juan P.' : 'Juan Pablo'}
+            <span className="text-sm font-medium text-gray-900 max-w-36 truncate block">
+              {getDisplayName(userName!)}
             </span>
           )}
 

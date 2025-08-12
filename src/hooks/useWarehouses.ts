@@ -1,25 +1,23 @@
 // Hook de inventario
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createWarehouse, getWarehouses } from '../api/api'
+import { createWarehouse, getWarehouses } from '../api/apiWarehouse'
 import type { SchemaAlmacen } from '../schemas/warehouse-schema'
 import { useToast } from '../context/ToastContext'
-import useNavigation from './useNavigation'
 
 
 const useWarehouses = (id_be: string) => {
 
   const { showToast } = useToast()
   const queryClient = useQueryClient()
-  const { goView } = useNavigation()
 
   // Query de almacén
   const warehousesQuery = useQuery<SchemaAlmacen, Error>({
     queryFn: () => getWarehouses(id_be),
     queryKey: ['warehouses', id_be],
     enabled: !!id_be,
-    retry: 1,
-    refetchInterval: 1000
+    retry: 1
+    // refetchInterval: 1000
   })
 
   // Crear almacén
@@ -27,19 +25,11 @@ const useWarehouses = (id_be: string) => {
     mutationFn: createWarehouse,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['warehouses'] })
-      goView('/warehouses')
-      showToast({
-        type: 'success',
-        title: 'Éxito',
-        message: data.message
-      })
+      showToast({ type: 'success', title: 'Éxito', message: data.message })
     },
     onError: error => {
-      showToast({
-        type: 'error',
-        title: 'Error',
-        message: error?.message
-      })
+      const mess = JSON.parse(error.message)
+      showToast({ type: 'error', title: 'Error', message: mess?.error })
     }
   })
 
@@ -53,6 +43,7 @@ const useWarehouses = (id_be: string) => {
     // Creación de almacenes
     createWarehouse: createWarehouseMutation.mutate,
     isPendingCreateWh: createWarehouseMutation.isPending,
+    isSuccessCreateWh: createWarehouseMutation.isSuccess,
     isErrorCreateWh: createWarehouseMutation.isError,
     errorCreateWh: createWarehouseMutation.error,
   }

@@ -197,7 +197,7 @@ const Toast = ({ type, title, message, others, duration = 4000, onClose }: Toast
     <div
       ref={toastRef}
       className={`
-        fixed top-4 right-4 z-50
+        fixed top-4 right-4 z-[100]
         mb-3 p-4 rounded-lg shadow-lg backdrop-blur-sm
         ${currentConfig.bgColor}
         min-w-[320px] max-w-[400px] group overflow-hidden

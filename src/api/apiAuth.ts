@@ -6,7 +6,7 @@ import api from "../utils/axios"
 
 
 // ------------------------- Autenticación -------------------------
-// Login
+// - Login
 export const authenticationUser = async (authData: AuthDataProps) => {
   try {
     const data = await api.post('/login', authData)
@@ -17,7 +17,7 @@ export const authenticationUser = async (authData: AuthDataProps) => {
 }
 
 
-// Activación de cuenta
+// = Activación de cuenta
 export const activateAccount = async (accountData: ActivateAccountApiProps) => {
   try {
     const { data } = await api.post('/activate-account', accountData)
@@ -28,7 +28,7 @@ export const activateAccount = async (accountData: ActivateAccountApiProps) => {
 }
 
 
-// Setup MFA
+// - Setup MFA
 export const setupMFA = async (token: string) => {
   try {
     const { data } = await api.post('/setup-mfa', {}, {
@@ -43,7 +43,7 @@ export const setupMFA = async (token: string) => {
 }
 
 
-// Verificar MFA
+// - Verificar MFA
 export const verifyMFA = async ({ token, code }: { token: string, code: string }) => {
   try {
     const { data } = await api.post('/verify-mfa', { codigo: code }, {
@@ -58,7 +58,7 @@ export const verifyMFA = async ({ token, code }: { token: string, code: string }
 }
 
 
-// Verificar inicio de sesión con MFA
+// - Verificar inicio de sesión con MFA
 export const verifyLoginMFA = async ({ mfa_token, code }: { mfa_token: string, code: string }) => {
   try {
     const { data } = await api.post('/verify-login-mfa', { codigo: code, mfa_token: mfa_token }, {

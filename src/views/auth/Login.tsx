@@ -7,9 +7,10 @@ import { LockIcon, LogIn, Package, Truck } from "lucide-react"
 import ButtonCustomLoading from "../../components/ui/button/ButtonCustomLoading"
 import useAuth from "../../hooks/useAuth"
 import MFASetup from "../../components/mfa/MFASetup"
-import { useEffect, useState } from "react"
 import MFAModal from "../../components/mfa/MFAModal"
 import MFAVerifyLogin from "../../components/mfa/MFAVerifyLogin"
+import { useDispatch, useSelector } from "react-redux"
+import { closeMfaSetupModal, closeMfaVerifyModal } from "../../helpers/redux/AuthSlice"
 
 
 const Login = () => {
@@ -17,22 +18,23 @@ const Login = () => {
   // Hook
   const {
     login,
-    isPendingLogin,
-    loginMutation
+    isPendingLogin
   } = useAuth()
 
-  const [showMFAModal, setShowMFAModal] = useState(false)
-  const [showVerifyLoginMFAModal, setShowVerifyLoginMFAModal] = useState(false)
+  const dispatch = useDispatch()
+
+  const showMfaSetupModal = useSelector((state: any) => state.authUser.showMfaSetupModal)
+  const showMfaVerifyModal = useSelector((state: any) => state.authUser.showMfaVerifyModal)
 
   const { control, handleSubmit, formState: { errors } } = useForm<AuthDataProps>()
 
-  useEffect(() => {
-    if (loginMutation.data?.status === 202) {
-      setShowMFAModal(true) // Setup MFA
-    } else if (loginMutation.data?.data.mfa_required) {
-      setShowVerifyLoginMFAModal(true) // Verify Login MFA
-    }
-  }, [loginMutation.data])
+  const handleCloseMfaSetup = () => {
+    dispatch(closeMfaSetupModal())
+  }
+
+  const handleCloseMfaVerify = () => {
+    dispatch(closeMfaVerifyModal())
+  }
 
   // Envío de información
   const handleDataAuth = async (formData: AuthDataProps) => {
@@ -175,21 +177,25 @@ const Login = () => {
         </div>
       </div>
 
-      <MFAModal
-        isOpen={showMFAModal}
-        onClose={() => setShowMFAModal(false)}
-        title="Configuración MFA"
-      >
-        <MFASetup onComplete={() => setShowMFAModal(false)} />
-      </MFAModal>
+      {showMfaSetupModal && (
+        <MFAModal
+          isOpen={showMfaSetupModal}
+          onClose={handleCloseMfaSetup}
+          title="Configuración MFA"
+        >
+          <MFASetup onComplete={handleCloseMfaSetup} />
+        </MFAModal>
+      )}
 
-      <MFAModal
-        isOpen={showVerifyLoginMFAModal}
-        onClose={() => setShowVerifyLoginMFAModal(false)}
-        title="Verificación MFA"
-      >
-        <MFAVerifyLogin onComplete={() => setShowVerifyLoginMFAModal(false)} />
-      </MFAModal>
+      {showMfaVerifyModal && (
+        <MFAModal
+          isOpen={showMfaVerifyModal}
+          onClose={handleCloseMfaVerify}
+          title="Verificación MFA"
+        >
+          <MFAVerifyLogin onComplete={handleCloseMfaVerify} />
+        </MFAModal>
+      )}
     </>
   )
 }

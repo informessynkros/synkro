@@ -8,6 +8,7 @@ import MenuProfile from "../menu/MenuProfile"
 import ButtonNotification from "../button/notifications/ButtonNotification"
 import useMediaQueries from "../../../hooks/useMediaQueries"
 import AlgoliaSearch from "../search/AlgoliaSearch"
+import { useSelector } from "react-redux"
 
 
 interface NavbarProps {
@@ -15,6 +16,9 @@ interface NavbarProps {
 }
 
 const Navbar = ({ onToggleSidebar }: NavbarProps) => {
+
+  // Redux
+  const { user } = useSelector((state: any) => state.authUser)
 
   // Estados
   const [notificationsOpen, setNotificationsOpen] = useState(false)
@@ -130,7 +134,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             </button>
             <div className="flex flex-col">
               <h1 className="text-xl font-semibold text-gray-700">
-                Bienvenido Pablo
+                Bienvenido {user?.name}
               </h1>
               <p className="text-sm text-gray-500">
                 Estas son las métricas de tu MVNO
@@ -160,6 +164,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
               />
             </div>
             <MenuProfile
+              userName={user.name}
               ref={profileRef}
               profileOpen={profileOpen}
               setProfileOpen={() => setProfileOpen(!profileOpen)}
@@ -204,6 +209,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
               </div>
 
               <MenuProfile
+                userName={user.name}
                 ref={profileRef}
                 profileOpen={profileOpen}
                 setProfileOpen={() => setProfileOpen(!profileOpen)}
@@ -242,7 +248,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             </button>
             <div className="flex flex-col">
               <h1 className="text-xl font-semibold text-gray-700">
-                Bienvenido Pablo
+                Bienvenido {user.name}
               </h1>
               <p className="text-sm text-gray-500">
                 Métricas de tu MVNO
@@ -266,6 +272,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             </div>
 
             <MenuProfile
+              userName={user.name}
               ref={profileRef}
               profileOpen={profileOpen}
               setProfileOpen={() => setProfileOpen(!profileOpen)}
