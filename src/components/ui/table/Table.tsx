@@ -241,7 +241,8 @@ function Table<TData>({
 
   return (
     <div className="mx-3">
-      <div className="w-full bg-white rounded-lg shadow">
+      {/* <div className="w-full bg-white rounded-lg shadow"> */}
+      <div className="w-full bg-white rounded-lg shadow" style={{ overflow: 'visible' }}>
         {/* Acción de botones */}
         {onButtonOptions && (
           <OptionsInventory />

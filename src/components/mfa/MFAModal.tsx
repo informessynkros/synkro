@@ -116,7 +116,7 @@ const MFAModal = ({ isOpen, onClose, title, children }: MFAModalProps) => {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
       onClick={() => handleOverlayClick}
     >
       <div
