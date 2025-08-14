@@ -140,13 +140,13 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
           <div className="flex items-center gap-3">
             <route.icon
               className={`w-5 h-5 transition-colors duration-200 ${isActive
-                ? 'text-sky-600'
+                ? 'text-teal-600'
                 : 'text-gray-600 group-hover:text-gray-800'
                 }`}
             />
             <span
               className={`font-medium transition-colors duration-200 ${isActive
-                ? 'text-sky-700'
+                ? 'text-teal-700'
                 : 'text-gray-700 group-hover:text-gray-900'
                 }`}
             >

@@ -1,6 +1,6 @@
 // Rutas
 
-import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2 } from "lucide-react"
+import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis } from "lucide-react"
 import type { ComponentType } from "react"
 import Dashboard from "../../views/home/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
@@ -8,7 +8,8 @@ import CRM from "../../views/home/CRM"
 import ChargeInventory from "../../components/inventory/ChargeInventory"
 import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
-import Users from "../../views/Users"
+import Users from "../../views/users/Users"
+import Permissions from "../../views/users/Permissions"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -71,14 +72,6 @@ export const routesDashboard: RouteConfig[] = [
     component: Warehouse,
     showInSidebar: true,
   },
-  // { // Crear almacén
-  //   key: 'create-inventory',
-  //   path: '/create-inventory',
-  //   name: 'Crear almacén',
-  //   icon: LayoutDashboard,
-  //   component: CreateInventory,
-  //   showInSidebar: false,
-  // },
   { // Cargar de inventario
     key: 'charge-inventory',
     path: '/charge-inventory',
@@ -87,12 +80,28 @@ export const routesDashboard: RouteConfig[] = [
     component: ChargeInventory,
     showInSidebar: false,
   },
-  { // Usuarios
-    key: 'users',
-    path: '/users',
-    name: 'Usuarios',
+  {
+    key: 'admin',
+    name: 'Gestión de usuarios',
     icon: Users2,
-    component: Users,
     showInSidebar: true,
+    subItems: [
+      { // Contactos
+        key: 'users',
+        path: '/users',
+        name: 'Usuarios',
+        icon: UsersRoundIcon,
+        component: Users,
+        showInSidebar: true,
+      },
+      { // Permisos
+        key: 'permissions',
+        path: '/permissions',
+        name: 'Permisos',
+        icon: ShieldEllipsis,
+        component: Permissions,
+        showInSidebar: true,
+      },
+    ]
   },
 ]

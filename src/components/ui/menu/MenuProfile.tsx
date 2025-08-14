@@ -93,12 +93,12 @@ const MenuProfile = forwardRef<HTMLDivElement, MenuProfileProps>(
           onClick={setProfileOpen}
           className={`
             flex items-center rounded-lg hover:bg-gray-100 transition-colors duration-200 
-            focus:outline-none focus:ring-2 focus:ring-blue-500
+            focus:outline-none focus:ring-2 focus:ring-teal-800
             ${isMobile ? 'p-1.5 space-x-2' : 'p-2 space-x-3'}
           `}
         >
           <div className={`
-            bg-[#202123] rounded-full 
+            bg-[#00555A] rounded-full 
             flex items-center justify-center
             ${isMobile ? 'w-7 h-7' : 'w-8 h-8'}
           `}>

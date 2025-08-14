@@ -1,5 +1,5 @@
 /* Estilos de Filtros */
-@keyframes checkAppear {
+/* @keyframes checkAppear {
   0% {
     transform: scale(0) rotate(45deg);
   }
@@ -8,5 +8,16 @@
   }
   100% {
     transform: scale(1) rotate(0deg);
+  }
+} */
+
+@keyframes checkAppear {
+  from {
+    transform: scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
   }
 }

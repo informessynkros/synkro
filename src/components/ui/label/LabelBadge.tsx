@@ -27,7 +27,7 @@ const badgeVariants = cva('inline-flex items-center rounded-md px-2 py-1 text-xs
 export const LabelBadge = ({
   labelText,
   variant = 'default',
-  className = "",
+  className = "font-semibold",
   ...props
 }: LabelBadgeProps) => {
   return (

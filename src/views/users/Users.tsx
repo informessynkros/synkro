@@ -1,16 +1,17 @@
 // Vista Usuarios
 
 import { useMemo } from "react"
-import { useUsers } from "../hooks/useUsers"
+import { useUsers } from "../../hooks/useUsers"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { User } from "../schemas/users-schema"
-import { LabelBadge } from "../components/ui/label/LabelBadge"
-import { FileEditIcon, User2, UsersIcon } from "lucide-react"
-import Table from "../components/ui/table/Table"
-import LoadingErrorHandler from "../components/chargeView/LoadingErrorHandler"
-import { useDrawerManager } from "../hooks/useDrawerManager"
+import type { User } from "../../schemas/users-schema"
+import { LabelBadge } from "../../components/ui/label/LabelBadge"
+import { FileEditIcon, PlusCircle, UsersIcon } from "lucide-react"
+import Table from "../../components/ui/table/Table"
+import LoadingErrorHandler from "../../components/chargeView/LoadingErrorHandler"
+import { useDrawerManager } from "../../hooks/useDrawerManager"
 import { Drawer } from "vaul"
-import FormUser from "../components/users/FormUser"
+import FormUser from "../../components/users/FormUser"
+import Roles from "../../components/users/Roles"
 
 
 const Users = () => {
@@ -58,7 +59,7 @@ const Users = () => {
     {
       header: 'Be ID',
       accessorKey: 'be_id',
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       cell: ({ row }) => {
         return <LabelBadge labelText={row.original.be_id} variant="info" />
       }
@@ -97,6 +98,13 @@ const Users = () => {
 
   const contentUsers = (
     <>
+      <Roles
+        enabledButton
+        buttonText="Agregar rol"
+        onButtonClick={() => console.log('Hola')}
+        iconButton={PlusCircle}
+      />
+
       <Table
         data={numberedUsers}
         columns={columns}
@@ -105,14 +113,14 @@ const Users = () => {
         icon={UsersIcon}
         enabledButton
         onButtonClick={handleOpenDrawer}
-        iconButton={User2}
-        buttonText="Crear usuario"
+        iconButton={PlusCircle}
+        buttonText="Agregar usuario"
       />
     </>
   )
 
   return (
-    <div className="h-screen">
+    <div>
       <LoadingErrorHandler
         isLoading={isLoadingUsers}
         isError={isErrorUsers}

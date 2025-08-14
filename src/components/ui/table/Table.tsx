@@ -1,5 +1,3 @@
-// Componente tabla
-
 import {
   type ColumnDef,
   flexRender,
@@ -10,11 +8,11 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronLeft, ChevronRight, type LucideIcon, SearchIcon } from "lucide-react"
-import { useState, useEffect, useMemo } from "react"
-import FilterDropdown from "../select/FilterDropdown"
+import { ChevronLeft, ChevronRight, type LucideIcon, Search, User, Shield, Tag, Building } from "lucide-react"
+import { useState, useEffect, useMemo, useRef } from "react"
+import { gsap } from "gsap"
+import FilterDropdown2 from "../select/FilterDropdown2"
 import Checkbox from "../button/checkbox/Checkbox"
-import LineSeparator from "../lineSeparator/LineSeparator"
 import useMediaQueries from "../../../hooks/useMediaQueries"
 import OptionsInventory from "./optionsInventory"
 
@@ -41,13 +39,30 @@ interface ReusableTableProps<TData> {
   onButtonOptions?: boolean
 }
 
+// Mapeo de configuración de filtros
+const getFilterConfig = (columnId: string) => {
+  const filterConfigs: Record<string, { title: string; icon: any }> = {
+    'be_id': { title: 'Be ID', icon: Tag },
+    'status': { title: 'Estado', icon: Shield },
+    'role': { title: 'Rol', icon: User },
+    'checkpoint': { title: 'Checkpoint', icon: Building },
+    'fabricante': { title: 'Fabricante', icon: Building },
+    'almacen': { title: 'Almacén', icon: Building },
+    'estadoLinea': { title: 'Estado Línea', icon: Shield },
+    'tipo_inventario': { title: 'Tipo Inventario', icon: Tag },
+    'operador_logistico': { title: 'Operador Logístico', icon: Building },
+    'mfa_enabled': { title: 'MFA', icon: Shield },
+    'name': { title: 'Nombre', icon: User },
+    'tipoAlmacen': { title: 'Tipo Almacén', icon: Building },
+  }
+
+  return filterConfigs[columnId] || { title: 'Filtro', icon: Tag }
+}
+
 function Table<TData>({
   data,
   columns,
-  title,
-  icon: Icon,
   iconButton: IconButton,
-  paragraph,
   buttonText,
   enabledButton = false,
   onButtonClick,
@@ -62,6 +77,11 @@ function Table<TData>({
   const [globalFilter, setGlobalFilter] = useState<string>("")
   const [columnFilters, setColumnFilters] = useState<any[]>([])
   const [rowSelection, setRowSelection] = useState({})
+
+  // Referencias para animaciones
+  const filtersRef = useRef<HTMLDivElement>(null)
+  const searchBarRef = useRef<HTMLDivElement>(null)
+  const tableRef = useRef<HTMLDivElement>(null)
 
   // Orden de las columnas
   const COLUMN_ORDER = [
@@ -176,91 +196,187 @@ function Table<TData>({
     }
   }, [table.getFilteredSelectedRowModel().rows, onSelectionChange])
 
+  // Animación inicial de entrada
+  useEffect(() => {
+    if (filtersRef.current && searchBarRef.current && tableRef.current) {
+      const tl = gsap.timeline({ delay: 0.1 })
+
+      // Animación escalonada de entrada
+      tl.fromTo([filtersRef.current, searchBarRef.current, tableRef.current],
+        {
+          opacity: 0,
+          y: 20
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: "power2.out"
+        }
+      )
+    }
+  }, [])
+
+  // Animación cuando cambian los filtros (búsqueda en tiempo real)
+  useEffect(() => {
+    if (tableRef.current) {
+      gsap.fromTo(tableRef.current.querySelectorAll('tbody tr'),
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.3,
+          stagger: 0.05,
+          ease: "power2.out"
+        }
+      )
+    }
+  }, [table.getRowModel().rows.length, globalFilter, columnFilters])
+
+  // Obtener filtros disponibles
+  const availableFilters = table.getHeaderGroups()[0]?.headers.filter(header =>
+    header.column.getCanFilter()
+  ) || []
+
   return (
     <div className="mx-3">
-      <div className="flex justify-between mb-6 items-center mt-5 bg-white p-5 rounded-lg flex-col md:flex-row gap-4 md:gap-0 shadow">
-        <div className="flex items-center">
-          <div className="flex-col">
-            <div className="flex text-center md:text-start">
-              <Icon className="md:w-12 md:h-12 text-gray-700" />
-              <div className="flex flex-col">
-                <h1 className="font-semibold text-gray-700 sm:text-4xl text-xl ml-4">{title}</h1>
-                <p className="mt-4 text-gray-600 ml-4">{paragraph}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {enabledButton && (
-          <div className="bg-gray-700 p-2 hover:bg-gray-800 duration-300 rounded-md w-full justify-center flex sm:w-auto">
-            <button className="flex gap-2 items-center cursor-pointer" type="button" onClick={onButtonClick}>
-              {IconButton && <IconButton className="text-white" />}
-              <span className="text-white font-base">{buttonText}</span>
-            </button>
-          </div>
-        )}
-      </div>
-
       <div className="w-full bg-white rounded-lg shadow">
         {/* Acción de botones */}
         {onButtonOptions && (
           <OptionsInventory />
         )}
 
-        {/* Filtros */}
-        <div className="p-3 md:p-6 flex flex-col">
-          <div className="mb-6 text-gray-600 flex gap-2 items-center">
-            <SearchIcon />
-            <h1 className="text-2xl font-semibold"> Filtros de búsqueda </h1>
+        {/* Filtros modernos */}
+        <div ref={filtersRef} className="p-6 border-b border-gray-100">
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-teal-50 rounded-lg">
+                <Search className="w-5 h-5 text-teal-600" />
+              </div>
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-2xl font-semibold text-gray-800">Filtros de búsqueda</h2>
+                {enabledButton && (
+                  <div className="bg-teal-700 p-2 hover:bg-teal-800 duration-300 rounded-md w-full justify-center flex sm:w-auto">
+                    <button className="flex gap-2 items-center cursor-pointer" type="button" onClick={onButtonClick}>
+                      {IconButton && <IconButton className="text-white" />}
+                      <span className="text-white font-base">{buttonText}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <p className="text-gray-600 text-sm">Filtra los resultados usando los criterios disponibles</p>
           </div>
 
-          <div className="flex flex-wrap gap-8">
-            {table.getHeaderGroups().map(headerGroup =>
-              headerGroup.headers.map((header: any) =>
-                header.column.getCanFilter() ? (
-                  <div key={header.id} className="flex items-center">
-                    <span className="text-sm text-gray-600 mr-2">{header?.column?.columnDef?.header}:</span>
-                    <FilterDropdown
-                      column={header.column}
-                      onFilterChange={values => header.column.setFilterValue(values)}
-                    />
-                  </div>
-                ) : null,
-              ),
-            )}
-          </div>
+          {/* Contenedor de filtros */}
+          {availableFilters.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {availableFilters.map((header: any) => {
+                const config = getFilterConfig(header.column.id)
+                return (
+                  <FilterDropdown2
+                    key={header.id}
+                    column={header.column}
+                    title={config.title}
+                    icon={config.icon}
+                    onFilterChange={values => header.column.setFilterValue(values)}
+                  />
+                )
+              })}
+            </div>
+          )}
+
+          {availableFilters.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-2">
+                <Search className="w-12 h-12 mx-auto" />
+              </div>
+              <p className="text-gray-500">No hay filtros disponibles para esta tabla</p>
+            </div>
+          )}
         </div>
 
-        <LineSeparator />
-
-        <div className="p-3 md:p-6 border-b border-gray-200">
-          <div className="md:flex md:flex-row md:items-center md:justify-between flex flex-col gap-3 items-center">
-            <div className="flex items-center space-x-2">
+        {/* Barra de búsqueda y controles */}
+        <div ref={searchBarRef} className="p-6 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Selector de entradas */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="pageSize" className="text-sm font-medium text-gray-700">
+                Mostrar:
+              </label>
               <select
+                id="pageSize"
                 value={table.getState().pagination.pageSize}
                 onChange={e => table.setPageSize(Number(e.target.value))}
-                className="block rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="block rounded-lg border border-gray-200 px-3 py-2 text-sm 
+                         focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400
+                         transition-all duration-200 bg-white"
               >
                 {[7, 10, 20, 30, 40, 50].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
-                    {pageSize}
+                    {pageSize} entradas
                   </option>
                 ))}
               </select>
-              <span className="text-sm text-gray-500">Entradas</span>
             </div>
+
+            {/* Búsqueda global */}
             <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 value={globalFilter ?? ""}
                 onChange={(e) => setGlobalFilter(e.target.value)}
-                placeholder="Buscar..."
-                className="px-4 py-2 border border-gray-200 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-200 focus:shadow-md"
+                placeholder="Buscar en toda la tabla..."
+                className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg w-full md:w-80 
+                         focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 
+                         transition-all duration-200 text-sm"
               />
+              {globalFilter && (
+                <button
+                  onClick={() => setGlobalFilter("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  ×
+                </button>
+              )}
             </div>
           </div>
+
+          {/* Indicadores de filtros activos */}
+          {(columnFilters.length > 0 || globalFilter) && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {globalFilter && (
+                <span className="inline-flex items-center gap-2 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-medium">
+                  Búsqueda: "{globalFilter}"
+                  <button
+                    onClick={() => setGlobalFilter("")}
+                    className="hover:bg-teal-200 rounded-full p-0.5"
+                  >
+                    ×
+                  </button>
+                </span>
+              )}
+              {columnFilters.map((filter, index) => (
+                <span key={index} className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                  {filter.id}: {Array.isArray(filter.value) ? filter.value.length : 1} filtro(s)
+                  <button
+                    onClick={() => {
+                      const newFilters = columnFilters.filter((_, i) => i !== index)
+                      setColumnFilters(newFilters)
+                    }}
+                    className="hover:bg-green-200 rounded-full p-0.5"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Tabla */}
-        <div className="overflow-x-auto">
+        <div ref={tableRef} className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               {table.getHeaderGroups().map(headerGroup => (
@@ -268,7 +384,7 @@ function Table<TData>({
                   {headerGroup.headers.map(header => (
                     <th
                       key={header.id}
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
@@ -279,11 +395,12 @@ function Table<TData>({
             <tbody className="bg-white divide-y divide-gray-200">
               {table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map(row => (
-                  <tr key={row.id} className="hover:bg-gray-100 duration-200">
+                  <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-200">
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className={`px-6 py-4 text-sm text-slate-600 font-normal ${row.getIsSelected() ? "bg-sky-500/10" : ""}`}
+                        className={`px-6 py-4 text-sm text-slate-600 font-normal transition-colors duration-200 ${row.getIsSelected() ? "bg-teal-50" : ""
+                          }`}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -292,8 +409,14 @@ function Table<TData>({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={getResponsiveColumns.length} className="px-6 py-4 text-center text-sm text-gray-500">
-                    No se encontraron resultados
+                  <td colSpan={getResponsiveColumns.length} className="px-6 py-12 text-center">
+                    <div className="text-gray-400 mb-2">
+                      <Search className="w-12 h-12 mx-auto" />
+                    </div>
+                    <div className="text-sm text-gray-500 font-medium">No se encontraron resultados</div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Intenta ajustar tus filtros o términos de búsqueda
+                    </div>
                   </td>
                 </tr>
               )}
@@ -301,83 +424,56 @@ function Table<TData>({
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} a ${Math.min(
+        {/* Pagination mejorada */}
+        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/50">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-gray-600">
+              {`Mostrando ${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} a ${Math.min(
                 (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-                data.length,
-              )} de ${data.length} resultados`}
+                table.getFilteredRowModel().rows.length,
+              )} de ${table.getFilteredRowModel().rows.length} resultados`}
+              {table.getFilteredRowModel().rows.length !== data.length && (
+                <span className="text-gray-400"> (filtrados de {data.length} total)</span>
+              )}
             </div>
+
             <div className="flex items-center gap-1">
               <button
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                className="px-3 py-2 bg-slate-100 border-none rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed duration-300 mr-3"
+                className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 
+                         hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4" />
+                Anterior
               </button>
 
-              <button
-                onClick={() => table.setPageIndex(0)}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${table.getState().pagination.pageIndex === 0
-                  ? "bg-gray-100 text-gray-700"
-                  : "bg-slate-100 text-gray-700 hover:bg-gray-50 hover:text-gray-500"
-                  }`}
-              >
-                1
-              </button>
-
-              {table.getPageCount() > 7 && table.getState().pagination.pageIndex > 3 && (
-                <span className="px-2 text-gray-500">...</span>
-              )}
-
-              {Array.from({ length: table.getPageCount() }, (_, i) => i)
-                .filter(pageIndex => {
-                  const current = table.getState().pagination.pageIndex
+              <div className="flex items-center gap-1 mx-2">
+                {Array.from({ length: Math.min(table.getPageCount(), 5) }, (_, i) => {
+                  const pageIndex = i
                   return (
-                    (pageIndex > 0 && pageIndex < 4) ||
-                    (pageIndex >= current - 1 && pageIndex <= current + 1) ||
-                    pageIndex > table.getPageCount() - 2
+                    <button
+                      key={pageIndex}
+                      onClick={() => table.setPageIndex(pageIndex)}
+                      className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 ${pageIndex === table.getState().pagination.pageIndex
+                        ? "bg-teal-600 text-white shadow-sm"
+                        : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+                        }`}
+                    >
+                      {pageIndex + 1}
+                    </button>
                   )
-                })
-                .filter(pageIndex => pageIndex !== 0 && pageIndex !== table.getPageCount() - 1)
-                .map(pageIndex => (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${pageIndex === table.getState().pagination.pageIndex
-                      ? "bg-gray-100 text-gray-700 duration-300"
-                      : "bg-slate-100 text-gray-700 hover:bg-gray-50 hover:text-gray-500 duration-300"
-                      }`}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                ))}
-
-              {table.getPageCount() > 7 && table.getState().pagination.pageIndex < table.getPageCount() - 4 && (
-                <span className="px-2 text-gray-500">...</span>
-              )}
-
-              {table.getPageCount() > 1 && (
-                <button
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${table.getState().pagination.pageIndex === table.getPageCount() - 1
-                    ? "bg-gray-100 text-gray-700"
-                    : "bg-slate-100 text-gray-700 hover:bg-gray-50 hover:text-gray-500"
-                    }`}
-                >
-                  {table.getPageCount()}
-                </button>
-              )}
+                })}
+              </div>
 
               <button
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                className="px-3 py-2 bg-slate-100 border-none rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed duration-300 ml-3"
+                className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 
+                         hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                <ChevronRight className="w-5 h-5" />
+                Siguiente
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>

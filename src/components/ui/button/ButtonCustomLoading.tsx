@@ -28,87 +28,131 @@ const ButtonCustomLoading = ({
   large = 'w-full'
 }: ButtonProps) => {
   // Hooks
-  const { isDesktop, isTablet, isMobile } = useMediaQueries()
+  const { isDesktop, isMobile } = useMediaQueries()
 
   // Referencias para GSAP
   const iconRef = useRef<HTMLDivElement>(null)
   const spinnerRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
   const loadingTextRef = useRef<HTMLSpanElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
-  // Animación con GSAP
+  // Animación con GSAP mejorada
   useEffect(() => {
     const icon = iconRef.current
     const spinner = spinnerRef.current
     const textElement = textRef.current
     const loadingTextElement = loadingTextRef.current
+    const button = buttonRef.current
 
-    if (!icon || !spinner || (!isMobile && (!textElement || !loadingTextElement))) return
+    if (!icon || !spinner || !button) return
 
+    // Crear timeline principal
     const tl = gsap.timeline()
 
     if (isLoading) {
+      // Estado inicial del spinner (invisible y escalado pequeño)
+      gsap.set(spinner, {
+        opacity: 0,
+        scale: 0.3,
+        rotation: 0
+      })
+
       // Animación de entrada del loading
-      if (!isMobile) {
+      tl.to(icon, {
+        scale: 0.3,
+        opacity: 0,
+        rotation: 90,
+        duration: 0.25,
+        ease: "power2.in"
+      })
+
+      // Animar texto si no es mobile
+      if (!isMobile && textElement && loadingTextElement) {
         tl.to(textElement, {
-          x: -20,
           opacity: 0,
+          y: -10,
           duration: 0.2,
-          ease: "power2.out"
-        })
-          .set(loadingTextElement, { x: 20, opacity: 0 })
-          .to(loadingTextElement, {
-            x: 0,
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out"
-          }, "-=0.1")
+          ease: "power2.in"
+        }, "-=0.15")
       }
 
-      tl.to(icon, {
-        x: -20,
-        opacity: 0,
-        duration: 0.2,
-        ease: "power2.out"
-      }, isMobile ? 0 : "-=0.3")
-        .set(spinner, { x: 20, opacity: 0 })
-        .to(spinner, {
-          x: 0,
+      // Entrada del spinner con efecto de escala y rotación
+      tl.to(spinner, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.3,
+        ease: "back.out(1.2)"
+      }, "-=0.1")
+
+      // Animar texto de loading
+      if (!isMobile && loadingTextElement) {
+        gsap.set(loadingTextElement, { opacity: 0, y: 10 })
+        tl.to(loadingTextElement, {
           opacity: 1,
-          duration: 0.3,
+          y: 0,
+          duration: 0.25,
           ease: "power2.out"
-        }, "-=0.1")
+        }, "-=0.2")
+      }
+
+      // Efecto de "pulsación" sutil en el botón
+      tl.to(button, {
+        scale: 0.98,
+        duration: 0.1,
+        ease: "power2.out"
+      })
+        .to(button, {
+          scale: 1,
+          duration: 0.15,
+          ease: "power2.out"
+        })
 
     } else {
       // Animación de salida del loading
       tl.to(spinner, {
-        x: 20,
+        scale: 0.3,
         opacity: 0,
-        duration: 0.2,
-        ease: "power2.out"
+        rotation: 180,
+        duration: 0.25,
+        ease: "power2.in"
       })
-        .set(icon, { x: -20, opacity: 0 })
-        .to(icon, {
-          x: 0,
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out"
-        }, "-=0.1")
 
-      if (!isMobile) {
+      // Ocultar texto de loading
+      if (!isMobile && loadingTextElement) {
         tl.to(loadingTextElement, {
-          x: 20,
           opacity: 0,
+          y: -10,
           duration: 0.2,
+          ease: "power2.in"
+        }, "-=0.15")
+      }
+
+      // Estado inicial del ícono antes de aparecer
+      gsap.set(icon, {
+        scale: 0.3,
+        opacity: 0,
+        rotation: -90
+      })
+
+      // Entrada del ícono
+      tl.to(icon, {
+        scale: 1,
+        opacity: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: "back.out(1.2)"
+      }, "-=0.1")
+
+      // Mostrar texto normal
+      if (!isMobile && textElement) {
+        gsap.set(textElement, { opacity: 0, y: 10 })
+        tl.to(textElement, {
+          opacity: 1,
+          y: 0,
+          duration: 0.25,
           ease: "power2.out"
-        }, "-=0.5")
-          .set(textElement, { x: -20, opacity: 0 })
-          .to(textElement, {
-            x: 0,
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out"
-          }, "-=0.1")
+        }, "-=0.2")
       }
     }
 
@@ -117,65 +161,87 @@ const ButtonCustomLoading = ({
     }
   }, [isLoading, isMobile])
 
-  const backgroundColor = bgColor === 'primary' ? 'bg-[#333]' : bgColor === 'secundary' ? 'bg-[#777]' : 'bg-[#333]'
-  const hoverColor = bgColor === 'primary' ? 'hover:bg-[#444]' : bgColor === 'secundary' ? 'hover:bg-[#666]' : 'hover:bg-[#444]'
+  // Configuración de colores mejorada
+  const getButtonStyles = () => {
+    const baseStyles = {
+      primary: {
+        bg: 'bg-teal-700',
+        hover: 'hover:bg-teal-800',
+        disabled: 'disabled:bg-gray-400'
+      },
+      secundary: {
+        bg: 'bg-gray-700',
+        hover: 'hover:bg-gray-800',
+        disabled: 'disabled:bg-gray-400'
+      }
+    }
+    return baseStyles[bgColor]
+  }
+
+  const styles = getButtonStyles()
 
   const buttonClasses = isMobile
-    ? `w-12 h-12 rounded-full flex items-center justify-center cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`
-    : `${large} px-3 py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`
+    ? `w-12 h-12 rounded-full flex items-center justify-center cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:transform-none ${className}`
+    : `${large} px-6 py-3 rounded-lg flex items-center justify-center gap-3 cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:transform-none ${className}`
 
   return (
     <div className="flex justify-center">
       <button
+        ref={buttonRef}
         onClick={onClick}
         type={type}
         disabled={isLoading}
         className={buttonClasses}
+        aria-label={isLoading ? loadingText : text}
       >
-        {/* Contenedor para el ícono y spinner con posición relativa */}
+        {/* Contenedor para el ícono y spinner */}
         <div className="relative flex items-center justify-center">
-          {/* Elemento invisible para mantener el espacio del ícono */}
-          <div className={`${isDesktop ? 'w-6 h-6' : isTablet ? 'w-5 h-5' : 'w-5 h-5'}`}></div>
+          {/* Elemento para mantener el espacio consistente */}
+          <div className={`${isDesktop ? 'w-6 h-6' : 'w-5 h-5'}`} />
 
+          {/* Ícono principal */}
           <div
             ref={iconRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="absolute inset-0 flex items-center justify-center"
           >
-            <Icon className={`${isDesktop ? 'w-6 h-6' : isTablet ? 'w-5 h-5' : 'w-5 h-5'} text-white`} />
+            <Icon className={`${isDesktop ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
           </div>
 
+          {/* Spinner de loading */}
           <div
             ref={spinnerRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center opacity-0"
           >
             <Spinner
-              size={isDesktop ? 24 : isTablet ? 20 : 20}
+              size={isDesktop ? 24 : 20}
               color="border-white"
               speed={0.8}
             />
           </div>
         </div>
 
-        {/* Textos solo en desktop/tablet */}
+        {/* Contenedor de textos - Solo en desktop/tablet */}
         {!isMobile && (
-          <div className="relative flex items-center">
-            {/* Texto invisible para mantener el espacio */}
-            <span className={`invisible text-white ${isDesktop ? 'text-normal' : isTablet ? 'text-sm' : 'text-sm'}`}>
-              {text.length > loadingText.length ? text : loadingText}
-            </span>
-
+          <div className="relative flex items-center justify-center min-w-0">
+            {/* Texto principal */}
             <span
               ref={textRef}
-              className={`absolute top-1/2 left-0 transform -translate-y-1/2 whitespace-nowrap text-white ${isDesktop ? 'text-normal' : isTablet ? 'text-sm' : 'text-sm'}`}
+              className={`absolute whitespace-nowrap text-white font-medium ${isDesktop ? 'text-base' : 'text-sm'} transition-opacity duration-200`}
             >
               {text}
             </span>
 
+            {/* Texto de loading */}
             <span
               ref={loadingTextRef}
-              className={`absolute top-1/2 left-0 transform -translate-y-1/2 whitespace-nowrap opacity-0 text-white ${isDesktop ? 'text-normal' : isTablet ? 'text-sm' : 'text-sm'}`}
+              className={`absolute whitespace-nowrap text-white font-medium opacity-0 ${isDesktop ? 'text-base' : 'text-sm'} transition-opacity duration-200`}
             >
               {loadingText}
+            </span>
+
+            {/* Espaciador invisible para mantener el ancho correcto */}
+            <span className={`invisible whitespace-nowrap font-medium ${isDesktop ? 'text-base' : 'text-sm'}`}>
+              {isLoading ? loadingText : text}
             </span>
           </div>
         )}
