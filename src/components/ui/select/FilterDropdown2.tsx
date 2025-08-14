@@ -1,4 +1,6 @@
+import type React from "react"
 import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
 import { gsap } from "gsap"
 import { Check, ChevronDown, Search, X, Filter } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
@@ -16,10 +18,11 @@ interface FilterDropdownProps {
   icon?: LucideIcon
 }
 
-const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdownProps) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange, title, icon }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [selectedValues, setSelectedValues] = useState<Set<any>>(new Set())
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
@@ -36,6 +39,28 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
       setSelectedValues(new Set(columnFilterValue))
     }
   }, [column])
+
+  // Calcular posición del dropdown
+  const calculateDropdownPosition = () => {
+    if (!buttonRef.current) return
+
+    const buttonRect = buttonRef.current.getBoundingClientRect()
+    const scrollY = window.scrollY
+    const scrollX = window.scrollX
+
+    // Posición debajo del botón, alineado a la izquierda
+    setDropdownPosition({
+      top: buttonRect.bottom + scrollY + 4, // 4px de separación
+      left: buttonRect.left + scrollX,
+      width: Math.max(buttonRect.width, 280) // Mínimo 280px o el ancho del botón
+    })
+  }
+
+  // Abrir dropdown
+  const handleOpen = () => {
+    calculateDropdownPosition()
+    setIsOpen(true)
+  }
 
   // Animación de apertura mejorada
   useEffect(() => {
@@ -144,6 +169,8 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
 
   // Debug: Log para verificar que se están obteniendo los valores
   useEffect(() => {
+    console.log('🔍 Valores únicos detectados:', uniqueValues)
+    console.log('📊 Mapa completo:', column.getFacetedUniqueValues())
   }, [uniqueValues.length])
 
   const handleValueClick = (value: any) => {
@@ -195,34 +222,34 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
     <div className="relative">
       <button
         ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleOpen}
         className={`
           group relative flex items-center gap-3 px-4 py-2.5 
           bg-white border border-gray-200 rounded-xl
           hover:border-gray-300 hover:shadow-sm
-          focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400
+          focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400
           transition-all duration-200 ease-out
-          ${hasSelection ? 'border-teal-300 bg-teal-50/50' : ''}
-          ${isOpen ? 'border-teal-400 shadow-sm' : ''}
+          ${hasSelection ? 'border-blue-300 bg-blue-50/50' : ''}
+          ${isOpen ? 'border-blue-400 shadow-sm' : ''}
         `}
       >
         {/* Icono */}
         <Icon className={`
           w-4 h-4 transition-colors duration-200
-          ${hasSelection ? 'text-teal-600' : 'text-gray-400 group-hover:text-gray-600'}
+          ${hasSelection ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}
         `} />
 
         {/* Texto */}
         <span className={`
           text-sm font-medium transition-colors duration-200 select-none
-          ${hasSelection ? 'text-teal-700' : 'text-gray-600 group-hover:text-gray-700'}
+          ${hasSelection ? 'text-blue-700' : 'text-gray-600 group-hover:text-gray-700'}
         `}>
           {title}
         </span>
 
         {/* Badge de contador */}
         {hasSelection && (
-          <div className="bg-teal-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+          <div className="bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
             {selectedValues.size}
           </div>
         )}
@@ -231,17 +258,18 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
         <div ref={chevronRef} className="ml-auto">
           <ChevronDown className={`
             w-4 h-4 transition-colors duration-200
-            ${hasSelection ? 'text-teal-600' : 'text-gray-400 group-hover:text-gray-600'}
+            ${hasSelection ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}
           `} />
         </div>
       </button>
 
-      {isOpen && (
+      {/* Portal para el dropdown */}
+      {isOpen && createPortal(
         <>
           {/* Backdrop */}
           <div
             ref={backdropRef}
-            className="fixed inset-0 z-[60] bg-black/5"
+            className="fixed inset-0 z-[9998] bg-black/5"
             onClick={handleClose}
             style={{ opacity: 0 }}
           />
@@ -249,8 +277,14 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
           {/* Dropdown */}
           <div
             ref={dropdownRef}
-            className="absolute z-[70] mt-2 bg-white rounded-xl shadow-xl border border-gray-200 min-w-[280px] right-0 overflow-hidden"
-            style={{ opacity: 0, transform: 'translateY(-8px) scale(0.96)' }}
+            className="fixed z-[9999] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+            style={{
+              opacity: 0,
+              transform: 'translateY(-8px) scale(0.96)',
+              top: dropdownPosition.top,
+              left: dropdownPosition.left,
+              minWidth: dropdownPosition.width
+            }}
           >
             <div ref={contentRef}>
               {/* Header con búsqueda */}
@@ -263,7 +297,7 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder={`Buscar en ${title.toLowerCase()}...`}
                     className="w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg 
-                             focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 
+                             focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 
                              transition-all duration-200 bg-white"
                   />
                   {searchTerm && (
@@ -291,7 +325,7 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
                     <div
                       key={index}
                       onClick={() => handleValueClick(value)}
-                      className="flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer 
+                      className="flex items-center px-4 py-3 hover:bg-blue-50 cursor-pointer 
                                transition-colors duration-150 group"
                       onMouseEnter={e => {
                         gsap.to(e.currentTarget, {
@@ -314,8 +348,8 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
                           w-4 h-4 border-2 rounded mr-3 flex items-center justify-center 
                           transition-all duration-200 relative overflow-hidden
                           ${isSelected
-                            ? "bg-teal-600 border-teal-600"
-                            : "border-gray-300 group-hover:border-teal-400"
+                            ? "bg-blue-600 border-blue-600"
+                            : "border-gray-300 group-hover:border-blue-400"
                           }
                         `}
                       >
@@ -327,7 +361,7 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
                       {/* Texto */}
                       <span className={`
                         text-sm transition-colors duration-200 flex-1
-                        ${isSelected ? 'text-teal-700 font-medium' : 'text-gray-700 group-hover:text-gray-900'}
+                        ${isSelected ? 'text-blue-700 font-medium' : 'text-gray-700 group-hover:text-gray-900'}
                       `}>
                         {value?.toString() || "N/A"}
                       </span>
@@ -366,8 +400,8 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
                   </button>
                   <button
                     onClick={handleClose}
-                    className="text-sm bg-teal-600 text-white px-4 py-1.5 rounded-lg 
-                             hover:bg-teal-700 transition-all duration-200 font-medium
+                    className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg 
+                             hover:bg-blue-700 transition-all duration-200 font-medium
                              hover:shadow-sm active:scale-95"
                     onMouseEnter={e => {
                       gsap.to(e.currentTarget, {
@@ -390,10 +424,11 @@ const FilterDropdown2 = ({ column, onFilterChange, title, icon }: FilterDropdown
               </div>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   )
 }
 
-export default FilterDropdown2
+export default FilterDropdown
