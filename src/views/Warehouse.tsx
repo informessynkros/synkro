@@ -120,7 +120,7 @@ const Warehouse = () => {
   )
 
   return (
-    <div className="h-screen">
+    <div>
       <LoadingErrorHandler
         isLoading={isLoadingWare}
         isError={isErrorWare}
