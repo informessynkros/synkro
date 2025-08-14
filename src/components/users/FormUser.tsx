@@ -227,7 +227,7 @@ const FormUser = ({ user, closeDrawer }: FormUser) => {
                     }}
                     placeholder="Selecciona el rol"
                     label="Roles"
-                    labelKey="nombre"
+                    labelKey="name"
                     valueKey='id_role'
                     extraInfo={rol => rol.id_role}
                     multiple={false}
