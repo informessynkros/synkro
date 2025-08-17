@@ -1,8 +1,8 @@
 // Rutas
 
-import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis } from "lucide-react"
+import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis, TruckElectric } from "lucide-react"
 import type { ComponentType } from "react"
-import Dashboard from "../../views/home/Dashboard"
+import Dashboard from "../../views/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
 import ChargeInventory from "../../components/inventory/ChargeInventory"
@@ -10,6 +10,7 @@ import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
 import Users from "../../views/users/Users"
 import Permissions from "../../views/users/Permissions"
+import Distributors from "../../views/home/Distributors"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -32,7 +33,7 @@ export const routesDashboard: RouteConfig[] = [
     component: Dashboard,
     showInSidebar: true,
   },
-  {
+  { // Menú padre - Home
     key: 'home',
     name: 'Home',
     icon: House,
@@ -60,6 +61,14 @@ export const routesDashboard: RouteConfig[] = [
         name: 'CRM',
         icon: Computer,
         component: CRM,
+        showInSidebar: true,
+      },
+      { // Distribuidores
+        key: 'distributors',
+        path: '/distributors',
+        name: 'Distribuidores',
+        icon: TruckElectric,
+        component: Distributors,
         showInSidebar: true,
       },
     ]

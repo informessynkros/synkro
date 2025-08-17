@@ -1,7 +1,7 @@
 // Endpoints de almacenes
 
 import { handleApiError } from "../helpers/errorHandler"
-import type { AlmacenFormData } from "../schemas/warehouse-schema"
+import type { CreateWarehouseRequest } from "../schemas/warehouse-schema"
 import api from "../utils/axios"
 
 
@@ -21,7 +21,7 @@ export const getWarehouses = async (id_be: string) => {
 }
 
 // - Creación de almacén
-export const createWarehouse = async (formData: AlmacenFormData) => {
+export const createWarehouse = async (formData: CreateWarehouseRequest) => {
   try {
     const { data } = await api.post('/createwarehouse', formData)
     return data
