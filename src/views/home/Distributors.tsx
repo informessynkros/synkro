@@ -1,28 +1,27 @@
-// Vista Usuarios
+// Vista de distribuidores
 
 import { useMemo } from "react"
-import { useUsers } from "../../hooks/useUsers"
+import useDistributors from "../../hooks/useDistributors"
+import type { Distributor } from "../../schemas/disributor-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { User } from "../../schemas/users-schema"
 import { LabelBadge } from "../../components/ui/label/LabelBadge"
-import { FileEditIcon, PlusCircle, UsersIcon } from "lucide-react"
+import { FileEditIcon, PlusCircle, Truck } from "lucide-react"
+import { useDrawerManager } from "../../hooks/useDrawerManager"
 import Table from "../../components/ui/table/Table"
 import LoadingErrorHandler from "../../components/chargeView/LoadingErrorHandler"
-import { useDrawerManager } from "../../hooks/useDrawerManager"
 import { Drawer } from "vaul"
-import FormUser from "../../components/users/FormUser"
-import Roles from "../../components/users/Roles"
+import FormDistributors from "../../components/distributors/FormDistributors"
 
 
-const Users = () => {
+const Distributors = () => {
 
-  // Hooks
+  // Hook
   const {
-    users,
-    isLoadingUsers,
-    isErrorUsers,
-    errorUsers
-  } = useUsers()
+    distributors,
+    isLoadingDistributors,
+    isErrorDistributors,
+    errorDistributors
+  } = useDistributors()
   const {
     isDrawerOpen,
     selectedItem,
@@ -30,17 +29,18 @@ const Users = () => {
     handleClick,
     handleCloseDrawer,
     setIsDrawerOpen
-  } = useDrawerManager<User>()
+  } = useDrawerManager<Distributor>()
 
-  // Ocultar el id de los usuarios
-  const numberedUsers = useMemo(() => {
-    return users.map((usr: User, index: number) => ({
-      ...usr,
+  // Ocultar el id de los distribuidores
+  const numberedDistributors = useMemo(() => {
+    return distributors.map((dist: Distributor, index: number) => ({
+      ...dist,
       consecutiveNumber: index + 1,
     }))
-  }, [users])
+  }, [distributors])
 
-  const columns: ColumnDef<User>[] = [
+
+  const columns: ColumnDef<Distributor>[] = [
     {
       header: 'ID',
       accessorKey: "consecutiveNumber",
@@ -48,35 +48,25 @@ const Users = () => {
     },
     {
       header: 'Nombre',
-      accessorKey: 'name',
+      accessorKey: 'nombre',
       enableColumnFilter: false,
     },
     {
       header: 'Email',
-      accessorKey: 'checkpoint',
+      accessorKey: 'correo',
       enableColumnFilter: false,
     },
     {
-      header: 'Be ID',
-      accessorKey: 'be_id',
+      header: 'Responsable',
+      accessorKey: 'responsable',
+      enableColumnFilter: false,
+    },
+    {
+      header: 'BE',
+      accessorKey: 'id_be',
       enableColumnFilter: true,
       cell: ({ row }) => {
-        return <LabelBadge labelText={row.original.be_id} variant="info" />
-      }
-    },
-    {
-      header: 'Estado',
-      accessorKey: 'status',
-      enableColumnFilter: false,
-      enableSorting: true,
-      cell: ({ row }) => {
-        if (row.original.status === 0) {
-          return <LabelBadge labelText='Inactivo' variant="error" />
-        } else if (row.original.status === 1) {
-          return <LabelBadge labelText='Pendiente' variant="warning" />
-        } else if (row.original.status === 2) {
-          return <LabelBadge labelText='Activo' variant="success" />
-        }
+        return <LabelBadge labelText={row.original.id_be} variant="info" />
       }
     },
     {
@@ -96,25 +86,18 @@ const Users = () => {
     },
   ]
 
-  const contentUsers = (
+  const contentDistributors = (
     <>
-      <Roles
-        enabledButton
-        buttonText="Agregar rol"
-        onButtonClick={() => console.log('Hola')}
-        iconButton={PlusCircle}
-      />
-
       <Table
-        data={numberedUsers}
+        data={numberedDistributors}
         columns={columns}
-        title="Usuarios"
-        paragraph="Aquí podrás administrar todos los usuarios existentes"
-        icon={UsersIcon}
+        title="Distribuidores"
+        paragraph="Aquí podrás administrar todos los Distribuidores existentes"
+        icon={Truck}
         enabledButton
         onButtonClick={handleOpenDrawer}
         iconButton={PlusCircle}
-        buttonText="Agregar usuario"
+        buttonText="Agregar distribuidor"
       />
     </>
   )
@@ -122,12 +105,12 @@ const Users = () => {
   return (
     <div>
       <LoadingErrorHandler
-        isLoading={isLoadingUsers}
-        isError={isErrorUsers}
-        error={errorUsers}
-        loadingMessage="Cargando usuarios..."
+        isLoading={isLoadingDistributors}
+        isError={isErrorDistributors}
+        error={errorDistributors}
+        loadingMessage="Cargando distribuidores..."
       >
-        {contentUsers}
+        {contentDistributors}
       </LoadingErrorHandler>
 
       <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
@@ -141,8 +124,8 @@ const Users = () => {
                 <Drawer.Title className="font-medium mb-4 text-lg">
                 </Drawer.Title>
                 {isDrawerOpen && (
-                  <FormUser
-                    user={selectedItem!!}
+                  <FormDistributors
+                    distributor={selectedItem!!}
                     closeDrawer={handleCloseDrawer}
                   />
                 )}
@@ -155,4 +138,4 @@ const Users = () => {
   )
 }
 
-export default Users
+export default Distributors

@@ -36,7 +36,7 @@ const RadioButtonGroup = <T = any,>({
   const isEmpty = value === undefined || value === null
 
   return (
-    <div className={`flex flex-col gap-3 ${className}`}>
+    <div className={`flex flex-col gap-1 ${className}`}>
       {label && (
         <label className="text-sm font-medium text-gray-700">
           {label}

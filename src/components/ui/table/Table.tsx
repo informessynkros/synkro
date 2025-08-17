@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronLeft, ChevronRight, type LucideIcon, Search, User, Shield, Tag, Building } from "lucide-react"
+import { ChevronLeft, ChevronRight, type LucideIcon, Search, User, Shield, Tag, Building, Truck, Package, MapPin } from "lucide-react"
 import { useState, useEffect, useMemo, useRef } from "react"
 import { gsap } from "gsap"
 import FilterDropdown2 from "../select/FilterDropdown2"
@@ -41,22 +41,31 @@ interface ReusableTableProps<TData> {
 
 // Mapeo de configuración de filtros
 const getFilterConfig = (columnId: string) => {
+  // console.log('🔍 DEBUG - columnId recibido:', columnId)
   const filterConfigs: Record<string, { title: string; icon: any }> = {
-    'be_id': { title: 'Be ID', icon: Tag },
+    'be_id': { title: 'BE', icon: Tag },
+    'id_be': { title: 'BE', icon: Tag },
     'status': { title: 'Estado', icon: Shield },
     'role': { title: 'Rol', icon: User },
     'checkpoint': { title: 'Checkpoint', icon: Building },
+    'mfa_enabled': { title: 'MFA', icon: Shield },
+    'name': { title: 'Nombre', icon: User },
+
+    'info_nombre': { title: 'Nombre', icon: Building },
+    'info_operador_logistico': { title: 'Operador Logístico', icon: Truck },
+    'info_tipo_inventario': { title: 'Tipo Almacén', icon: Package },
+    'info_direccion_calle': { title: 'Dirección', icon: MapPin },
+
     'fabricante': { title: 'Fabricante', icon: Building },
     'almacen': { title: 'Almacén', icon: Building },
     'estadoLinea': { title: 'Estado Línea', icon: Shield },
-    'tipo_inventario': { title: 'Tipo Inventario', icon: Tag },
-    'operador_logistico': { title: 'Operador Logístico', icon: Building },
-    'mfa_enabled': { title: 'MFA', icon: Shield },
-    'name': { title: 'Nombre', icon: User },
     'tipoAlmacen': { title: 'Tipo Almacén', icon: Building },
   }
 
-  return filterConfigs[columnId] || { title: 'Filtro', icon: Tag }
+  const result = filterConfigs[columnId] || { title: 'Filtro', icon: Tag }
+  // console.log('📤 DEBUG - resultado para', columnId, ':', result)
+
+  return result
 }
 
 function Table<TData>({
@@ -105,7 +114,12 @@ function Table<TData>({
     'info.direccion.calle',
     'info.direccion.ciudad',
     'info.operador_logistico',
-    'info.tipo_inventario'
+    'info.tipo_inventario',
+    // Distribuidores
+    'nombre',
+    'correo',
+    'responsable',
+    'id_be'
   ]
 
   // Configuración de columnas por breakpoint

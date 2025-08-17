@@ -167,12 +167,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
       return aStr.localeCompare(bStr)
     })
 
-  // Debug: Log para verificar que se están obteniendo los valores
-  useEffect(() => {
-    console.log('🔍 Valores únicos detectados:', uniqueValues)
-    console.log('📊 Mapa completo:', column.getFacetedUniqueValues())
-  }, [uniqueValues.length])
-
   const handleValueClick = (value: any) => {
     const newSelected = new Set(selectedValues)
     if (newSelected.has(value)) {
@@ -227,29 +221,29 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
           group relative flex items-center gap-3 px-4 py-2.5 
           bg-white border border-gray-200 rounded-xl
           hover:border-gray-300 hover:shadow-sm
-          focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400
+          focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400
           transition-all duration-200 ease-out
-          ${hasSelection ? 'border-blue-300 bg-blue-50/50' : ''}
-          ${isOpen ? 'border-blue-400 shadow-sm' : ''}
+          ${hasSelection ? 'border-teal-300 bg-teal-50/50' : ''}
+          ${isOpen ? 'border-teal-400 shadow-sm' : ''}
         `}
       >
         {/* Icono */}
         <Icon className={`
           w-4 h-4 transition-colors duration-200
-          ${hasSelection ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}
+          ${hasSelection ? 'text-teal-600' : 'text-gray-400 group-hover:text-gray-600'}
         `} />
 
         {/* Texto */}
         <span className={`
           text-sm font-medium transition-colors duration-200 select-none
-          ${hasSelection ? 'text-blue-700' : 'text-gray-600 group-hover:text-gray-700'}
+          ${hasSelection ? 'text-teal-700' : 'text-gray-600 group-hover:text-gray-700'}
         `}>
           {title}
         </span>
 
         {/* Badge de contador */}
         {hasSelection && (
-          <div className="bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+          <div className="bg-teal-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
             {selectedValues.size}
           </div>
         )}
@@ -258,7 +252,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
         <div ref={chevronRef} className="ml-auto">
           <ChevronDown className={`
             w-4 h-4 transition-colors duration-200
-            ${hasSelection ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}
+            ${hasSelection ? 'text-teal-600' : 'text-gray-400 group-hover:text-gray-600'}
           `} />
         </div>
       </button>
@@ -294,10 +288,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={e => setSearchTerm(e.target.value)}
                     placeholder={`Buscar en ${title.toLowerCase()}...`}
                     className="w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg 
-                             focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 
+                             focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 
                              transition-all duration-200 bg-white"
                   />
                   {searchTerm && (
@@ -325,7 +319,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
                     <div
                       key={index}
                       onClick={() => handleValueClick(value)}
-                      className="flex items-center px-4 py-3 hover:bg-blue-50 cursor-pointer 
+                      className="flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer 
                                transition-colors duration-150 group"
                       onMouseEnter={e => {
                         gsap.to(e.currentTarget, {
@@ -348,8 +342,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
                           w-4 h-4 border-2 rounded mr-3 flex items-center justify-center 
                           transition-all duration-200 relative overflow-hidden
                           ${isSelected
-                            ? "bg-blue-600 border-blue-600"
-                            : "border-gray-300 group-hover:border-blue-400"
+                            ? "bg-teal-600 border-teal-600"
+                            : "border-gray-300 group-hover:border-gray-400"
                           }
                         `}
                       >
@@ -361,7 +355,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
                       {/* Texto */}
                       <span className={`
                         text-sm transition-colors duration-200 flex-1
-                        ${isSelected ? 'text-blue-700 font-medium' : 'text-gray-700 group-hover:text-gray-900'}
+                        ${isSelected ? 'text-teal-700 font-medium' : 'text-gray-700 group-hover:text-gray-900'}
                       `}>
                         {value?.toString() || "N/A"}
                       </span>
@@ -400,8 +394,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ column, onFilterChange,
                   </button>
                   <button
                     onClick={handleClose}
-                    className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg 
-                             hover:bg-blue-700 transition-all duration-200 font-medium
+                    className="text-sm bg-teal-600 text-white px-4 py-1.5 rounded-lg 
+                             hover:bg-teal-700 transition-all duration-200 font-medium
                              hover:shadow-sm active:scale-95"
                     onMouseEnter={e => {
                       gsap.to(e.currentTarget, {

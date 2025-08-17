@@ -2,7 +2,6 @@
 
 import { Edit, PackagePlus, Truck } from "lucide-react"
 import Table from "../components/ui/table/Table"
-import inventory from '../assets/inventoryData.json'
 import { useMemo, useState } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { Almacen } from "../schemas/warehouse-schema"
@@ -10,7 +9,7 @@ import useWarehouses from "../hooks/useWarehouses"
 import LoadingErrorHandler from "../components/chargeView/LoadingErrorHandler"
 // import useNavigation from "../hooks/useNavigation"
 import { Drawer } from "vaul"
-import FormInventory from "../components/inventory/FormInventory"
+import FormWarehouse from "../components/warehouse/FormWarehouse"
 import { useSelector } from "react-redux"
 
 
@@ -25,6 +24,8 @@ const Warehouse = () => {
     isErrorWare,
     errorWare
   } = useWarehouses(user.be_id)
+
+  console.log('Almacenes', warehouses)
 
   // Estados
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -51,12 +52,12 @@ const Warehouse = () => {
   }
 
   // Números consecutivos
-  const numberedInventory = useMemo(() => {
-    return warehouses.map((inv, index) => ({
-      ...inv,
+  const numberedWarehouse = useMemo(() => {
+    return warehouses.map((warehouse: any, index: any) => ({
+      ...warehouse,
       consecutiveNumber: index + 1,
     }))
-  }, [inventory])
+  }, [warehouses])
 
   // Definicion de usuarios para pintarlos dentro de la tabla
   const columns: ColumnDef<Almacen>[] = [
@@ -105,7 +106,7 @@ const Warehouse = () => {
   const contentWarehouses = (
     <>
       <Table
-        data={numberedInventory}
+        data={numberedWarehouse}
         columns={columns}
         title="Almacén"
         icon={Truck}
@@ -140,10 +141,12 @@ const Warehouse = () => {
               <div className="w-auto mx-auto">
                 <Drawer.Title className="font-medium mb-4 text-lg">
                 </Drawer.Title>
-                <FormInventory
-                  warehouse={selectedWarehouse!!}
-                  closeDrawer={handleCloseDrawer}
-                />
+                {isDrawerOpen && (
+                  <FormWarehouse
+                    warehouse={selectedWarehouse || null}
+                    closeDrawer={handleCloseDrawer}
+                  />
+                )}
               </div>
             </div>
           </Drawer.Content>

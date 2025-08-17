@@ -181,8 +181,8 @@ const ButtonCustomLoading = ({
   const styles = getButtonStyles()
 
   const buttonClasses = isMobile
-    ? `w-12 h-12 rounded-full flex items-center justify-center cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:transform-none ${className}`
-    : `${large} px-6 py-3 rounded-lg flex items-center justify-center gap-3 cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:transform-none ${className}`
+    ? `w-12 h-12 rounded-full flex items-center justify-center cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform disabled:cursor-not-allowed disabled:transform-none ${className}`
+    : `${large} px-6 py-3 rounded-lg flex items-center justify-center gap-3 cursor-pointer ${styles.bg} ${styles.hover} ${styles.disabled} transition-all duration-300 transform disabled:cursor-not-allowed disabled:transform-none ${className}`
 
   return (
     <div className="flex justify-center">

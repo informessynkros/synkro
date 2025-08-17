@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createWarehouse, getWarehouses } from '../api/apiWarehouse'
-import type { SchemaAlmacen } from '../schemas/warehouse-schema'
 import { useToast } from '../context/ToastContext'
 
 
@@ -12,7 +11,7 @@ const useWarehouses = (id_be: string) => {
   const queryClient = useQueryClient()
 
   // Query de almacén
-  const warehousesQuery = useQuery<SchemaAlmacen, Error>({
+  const warehousesQuery = useQuery({
     queryFn: () => getWarehouses(id_be),
     queryKey: ['warehouses', id_be],
     enabled: !!id_be,
