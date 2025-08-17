@@ -41,8 +41,6 @@ const FormUser = ({ user, closeDrawer }: FormUserProps) => {
   const { user: usr } = useSelector((state: any) => state.authUser)
 
   // Estados
-  const [selectedRole, setSelectedRole] = useState<string | null>(null)
-  const [selectedMvno, setSelectedMvno] = useState<string | null>(null)
   const [isMFA, setIsMFA] = useState(user?.mfa_required === true)
 
   // Valores por defecto del formulario
@@ -74,8 +72,8 @@ const FormUser = ({ user, closeDrawer }: FormUserProps) => {
         name: formData.name,
         checkpoint: formData.checkpoint,
         phone_number: formData.phone_number,
-        mvno_id: selectedMvno!!,
-        role_id: selectedRole!!,
+        mvno_id: formData.mvno_id,// selectedMvno!!,
+        role_id: formData.role_id,// selectedRole!!,
         mfa_required: isMFA,
         created_by: usr.checkpoint
       }
@@ -177,13 +175,10 @@ const FormUser = ({ user, closeDrawer }: FormUserProps) => {
                   onSelect={selected => {
                     if (Array.isArray(selected) && selected.length > 0) {
                       onChange(selected[0].id_role)
-                      setSelectedRole(selected[0].id_role)
                     } else if (selected && typeof selected === 'object' && 'id_role' in selected) {
                       onChange(selected.id_role)
-                      setSelectedRole(selected.id_role)
                     } else {
                       onChange("")
-                      setSelectedRole(null)
                     }
                   }}
                   placeholder="Selecciona el rol"
@@ -212,13 +207,10 @@ const FormUser = ({ user, closeDrawer }: FormUserProps) => {
                   onSelect={selected => {
                     if (Array.isArray(selected) && selected.length > 0) {
                       onChange(selected[0].mvno_id)
-                      setSelectedMvno(selected[0].mvno_id)
                     } else if (selected && typeof selected === 'object' && 'mvno_id' in selected) {
                       onChange(selected.mvno_id)
-                      setSelectedMvno(selected.mvno_id)
                     } else {
                       onChange("")
-                      setSelectedMvno(null)
                     }
                   }}
                   placeholder="Selecciona mvno"
