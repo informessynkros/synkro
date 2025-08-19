@@ -27,7 +27,7 @@ const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
 
   const defaultValues: WarehouseFlatFormData = {
     ...flattenWarehouse(warehouse),
-    id_be: user.be_id
+    id_be: user.be_id,
   }
 
   // Hooks

@@ -27,8 +27,8 @@ const DynamicInputArray = ({
 }: DynamicInputArrayProps) => {
 
   const [inputValues, setInputValues] = useState<Array<{ id: string, value: string }>>(
-    values.length > 0
-      ? values.map((val, idx) => ({ id: `input-${Date.now()}-${idx}`, value: val }))
+    (values || []).length > 0
+      ? (values || []).map((val, idx) => ({ id: `input-${Date.now()}-${idx}`, value: val }))
       : [{ id: `input-${Date.now()}-0`, value: '' }]
   )
 
