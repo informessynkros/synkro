@@ -57,7 +57,8 @@ export const WarehouseFlatFormSchema = z.object({
   cp: z.string(),
   ciudad: z.string(),
   estado: z.string(),
-  ubicacion_interna: z.string()
+  // ubicacion_interna: z.string()
+  ubicacion_interna: z.array(z.string())
 })
 
 export type WarehouseFlatFormData = z.infer<typeof WarehouseFlatFormSchema>
@@ -95,7 +96,7 @@ export const flattenWarehouse = (warehouse: Almacen | null): WarehouseFlatFormDa
       cp: '',
       ciudad: '',
       estado: '',
-      ubicacion_interna: ''
+      ubicacion_interna: []
     }
   }
 
@@ -110,7 +111,8 @@ export const flattenWarehouse = (warehouse: Almacen | null): WarehouseFlatFormDa
     cp: warehouse.info.direccion.cp,
     ciudad: warehouse.info.direccion.ciudad,
     estado: warehouse.info.direccion.estado,
-    ubicacion_interna: warehouse.info.ubicacion_interna.join(', ')
+    // ubicacion_interna: warehouse.info.ubicacion_interna.join(', ')
+    ubicacion_interna: warehouse.info.ubicacion_interna
   }
 }
 
@@ -129,9 +131,10 @@ export const transformToCreateRequest = (formData: WarehouseFlatFormData): Creat
         ciudad: formData.ciudad,
         estado: formData.estado
       },
-      ubicacion_interna: Array.isArray(formData.ubicacion_interna)
-        ? formData.ubicacion_interna
-        : formData.ubicacion_interna.split(',').map(item => item.trim()).filter(item => item.length > 0)
+      // ubicacion_interna: Array.isArray(formData.ubicacion_interna)
+      //   ? formData.ubicacion_interna
+      //   : formData.ubicacion_interna.split(',').map(item => item.trim()).filter(item => item.length > 0)
+      ubicacion_interna: formData.ubicacion_interna
     }
   }
 }
