@@ -33,3 +33,17 @@ export interface InventoryDataProps {
   MVNO: string
   almacen: string
 }
+
+
+export interface InventoryUploadData {
+  nombre: string
+  tipo_inventario: string
+  id_almacen: string
+  region: string
+  archivo: File | null
+}
+
+export interface InventoryUploadRequest {
+  id_be: string
+  formData: FormData
+}

@@ -16,8 +16,6 @@ import PublicRoute from "./helpers/auth/PublicRoute"
 
 function Router() {
 
-  // Uso de isAtuhtenticated
-
   // Función que genera las rutas
   const generateRoutes = (routes: RouteConfig[]): ReactNode => {
     return routes.map(route => {

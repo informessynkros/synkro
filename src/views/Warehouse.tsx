@@ -11,7 +11,6 @@ import LoadingErrorHandler from "../components/chargeView/LoadingErrorHandler"
 import { Drawer } from "vaul"
 import FormWarehouse from "../components/warehouse/FormWarehouse"
 import { useSelector } from "react-redux"
-import InventorySection from "../components/inventory/InventorySection"
 
 
 const Warehouse = () => {
@@ -149,10 +148,6 @@ const Warehouse = () => {
                     closeDrawer={handleCloseDrawer}
                   />
                 )}
-                <InventorySection
-                // mvno={user?.be_id}
-                // almacen={selectedWarehouse?.id_almacen!!}
-                />
               </div>
             </div>
           </Drawer.Content>

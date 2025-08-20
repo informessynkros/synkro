@@ -25,7 +25,7 @@ interface FormConfigProps<T extends FieldValues> {
   isSuccess: boolean
   isError: boolean
   // Render function para los campos del formulario
-  renderFields: (control: Control<T>, errors: any) => ReactNode
+  renderFields: (control: Control<T>, errors: any, setValue?: any) => ReactNode
   // Configuración de botones (opcional)
   submitButtonText?: {
     create: string
@@ -66,6 +66,7 @@ function Form<T extends FieldValues>({
 
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
     reset
@@ -98,13 +99,13 @@ function Form<T extends FieldValues>({
         icon={icon}
       />
 
-      <div className="shadow-md p-6 rounded-md mt-6">
+      <div className="shadow-md p-6 rounded-md mt-6 bg-white">
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
           className="flex flex-col"
         >
           {/* Renderizamos los campos específicos */}
-          {renderFields(control, errors)}
+          {renderFields(control, errors, setValue)}
 
           {/* Boton de acción */}
           <div className="flex justify-end gap-4 mt-6">

@@ -7,13 +7,15 @@ import useMediaQueries from "../../hooks/useMediaQueries"
 import { useEffect } from "react"
 import type { RadioOption } from "../ui/button/radioButton/RadioButtonGroup"
 import { Controller } from "react-hook-form"
-import { Box, Boxes, Building, Globe, Hash, Home, MapPin, PersonStanding, Pin, Truck } from "lucide-react"
+import { Box, Boxes, Building, Globe, Hash, Home, MapPin, PersonStanding, Pin, Truck, UploadCloud } from "lucide-react"
 import MessageToasty from "../ui/messages/MessageToasty"
 import RadioButtonGroup from "../ui/button/radioButton/RadioButtonGroup"
 import DynamicInputArray from "../ui/input/DynamicInputArray"
 import Form from "../ui/form/Form"
 import AddressMapController from "../ui/map/AddressMapController"
 import LineSeparator from "../ui/lineSeparator/LineSeparator"
+import useNavigation from "../../hooks/useNavigation"
+import ButtonCustom from "../ui/button/ButtonCustom"
 
 
 interface FormWarehouseProps {
@@ -22,6 +24,7 @@ interface FormWarehouseProps {
 }
 
 const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
+  console.log(warehouse)
 
   const { user } = useSelector((state: any) => state.authUser)
 
@@ -38,6 +41,7 @@ const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
     isErrorCreateWh
   } = useWarehouses(user.be_id)
   const { isDesktop, isLaptop, isTablet, isMobile } = useMediaQueries()
+  const { goView } = useNavigation()
 
   const tipoInventarioOptions: RadioOption<'FISICO' | 'VIRTUAL'>[] = [
     {
@@ -49,6 +53,14 @@ const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
       value: 'VIRTUAL',
     }
   ]
+
+  const handleLoadInventory = () => {
+    // Obtenemos el be_id del localStorage
+    const be_id = user.be_id
+    const id_almacen = warehouse?.id_almacen
+    const nombre_almacen = warehouse?.info.nombre
+    goView(`/charge-inventory?id_be=${be_id}&id_almacen=${id_almacen}&nombre_almacen=${encodeURIComponent(nombre_almacen!!)}`)
+  }
 
   // Envio de información
   const handleSubmitWarehouse = async (formData: WarehouseFlatFormData, isEditing: boolean) => {
@@ -73,10 +85,19 @@ const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
       <div>
         {/* Información general */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            <Boxes size={20} />
-            Información del almacén
-          </h3>
+          <div className="flex items-center justify-between mb-7">
+            <h3 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+              <Boxes size={20} />
+              Información del almacén
+            </h3>
+
+            <ButtonCustom
+              text="Cargar inventario"
+              icon={UploadCloud}
+              onClick={handleLoadInventory}
+              large="w-auto"
+            />
+          </div>
 
           <div className={`grid gap-4 ${isDesktop ? 'grid-cols-3' : isLaptop ? 'grid-cols-2' : isMobile ? 'grid-cols-1' : ''}`}>
             <Controller
