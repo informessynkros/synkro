@@ -11,6 +11,7 @@ interface ButtonProps {
   type?: "submit" | "reset" | "button"
   onClick?: () => void
   large?: 'w-full' | 'w-auto'
+  disabled?: boolean
 }
 
 const ButtonCustom = ({
@@ -20,7 +21,8 @@ const ButtonCustom = ({
   bgColor = 'primary',
   type = "button",
   onClick,
-  large = 'w-full'
+  large = 'w-full',
+  disabled
 }: ButtonProps) => {
   // Hooks
   const { isDesktop, isTablet } = useMediaQueries()
@@ -33,6 +35,7 @@ const ButtonCustom = ({
       <button
         onClick={onClick}
         type={type}
+        disabled={disabled}
         className={`${large} px-3 py-2 rounded-lg flex items-center justify-center gap-4 cursor-pointer ${backgroundColor} duration-200 ${hoverColor} ${className}`}
       >
         <Icon className={`${isDesktop ? 'w-6 h-6' : isTablet ? 'w-5 h-5' : 'w-5 h-5'} text-white`} />

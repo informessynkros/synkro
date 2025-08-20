@@ -5,12 +5,12 @@ import type { ComponentType } from "react"
 import Dashboard from "../../views/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
-import ChargeInventory from "../../components/inventory/ChargeInventory"
 import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
 import Users from "../../views/users/Users"
 import Permissions from "../../views/users/Permissions"
 import Distributors from "../../views/home/Distributors"
+import InventoryWizard from "../../components/inventory/InventoryWizard"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -26,12 +26,12 @@ export interface RouteConfig {
 
 export const routesDashboard: RouteConfig[] = [
   { // Dashboard
-    key: 'dashboard',
-    path: '/dashboard',
-    name: 'Dashboard',
-    icon: LayoutDashboard,
-    component: Dashboard,
-    showInSidebar: true,
+    key: 'dashboard', // LLave de la ruta
+    path: '/dashboard', // Ruta
+    name: 'Dashboard', // Nombre del módulo
+    icon: LayoutDashboard, // Icono
+    component: Dashboard, // Vista / Componente
+    showInSidebar: true, // Se mostrara en el sidebar?
   },
   { // Menú padre - Home
     key: 'home',
@@ -86,7 +86,7 @@ export const routesDashboard: RouteConfig[] = [
     path: '/charge-inventory',
     name: 'Cargar almacén',
     icon: LayoutDashboard,
-    component: ChargeInventory,
+    component: InventoryWizard,
     showInSidebar: false,
   },
   {
