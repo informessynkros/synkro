@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react"
 import useMediaQueries from "../../../hooks/useMediaQueries"
+import type { Ref } from "react"
 
 interface ButtonProps {
   text: string
@@ -12,6 +13,7 @@ interface ButtonProps {
   onClick?: () => void
   large?: 'w-full' | 'w-auto'
   disabled?: boolean
+  ref?: Ref<HTMLButtonElement> | undefined
 }
 
 const ButtonCustom = ({
@@ -22,7 +24,8 @@ const ButtonCustom = ({
   type = "button",
   onClick,
   large = 'w-full',
-  disabled
+  disabled,
+  ref
 }: ButtonProps) => {
   // Hooks
   const { isDesktop, isTablet } = useMediaQueries()
@@ -33,6 +36,7 @@ const ButtonCustom = ({
   return (
     <div className="flex justify-center">
       <button
+        ref={ref}
         onClick={onClick}
         type={type}
         disabled={disabled}
