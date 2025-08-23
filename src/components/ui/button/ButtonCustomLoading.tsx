@@ -14,6 +14,7 @@ interface ButtonProps {
   type?: "submit" | "reset" | "button"
   onClick?: () => void
   large?: 'w-full' | 'w-auto'
+  disabled?: boolean
 }
 
 const ButtonCustomLoading = ({
@@ -25,7 +26,8 @@ const ButtonCustomLoading = ({
   loadingText = 'Procesando...',
   type = "button",
   onClick,
-  large = 'w-full'
+  large = 'w-full',
+  disabled
 }: ButtonProps) => {
   // Hooks
   const { isDesktop, isMobile } = useMediaQueries()
@@ -190,7 +192,7 @@ const ButtonCustomLoading = ({
         ref={buttonRef}
         onClick={onClick}
         type={type}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         className={buttonClasses}
         aria-label={isLoading ? loadingText : text}
       >

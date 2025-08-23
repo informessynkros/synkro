@@ -24,7 +24,7 @@ interface FormWarehouseProps {
 }
 
 const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
-  console.log(warehouse)
+  // console.log(warehouse)
 
   const { user } = useSelector((state: any) => state.authUser)
 
@@ -319,6 +319,7 @@ const FormWarehouse = ({ warehouse, closeDrawer }: FormWarehouseProps) => {
       title="almacén"
       icon={Box}
       item={warehouse ? defaultValues : null}
+      enabledSection
       closeDrawer={closeDrawer}
       defaultValues={defaultValues}
       onSubmit={handleSubmitWarehouse}

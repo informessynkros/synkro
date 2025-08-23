@@ -234,6 +234,7 @@ const FormUser = ({ user, closeDrawer }: FormUserProps) => {
       title="usuario"
       icon={User2}
       item={user ? defaultValues : null}
+      enabledSection
       closeDrawer={closeDrawer}
       defaultValues={defaultValues}
       onSubmit={handleSubmitUser}

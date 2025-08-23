@@ -38,8 +38,8 @@ export interface InventoryDataProps {
 export interface InventoryUploadData {
   nombre: string
   tipo_inventario: string
-  id_almacen: string
   region: string
+  id_almacen: string
   archivo: File | null
 }
 
