@@ -59,8 +59,8 @@ export const RolesSchema = z.object({
   roles: z.array(
     z.object({
       id_role: z.string(),
-      nombre: z.string(),
-      activo: z.number(),
+      name: z.string(),
+      status: z.number(),
     })
   )
 })
