@@ -1,11 +1,11 @@
 // Rutas
 
-import { Boxes, House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis, TruckElectric } from "lucide-react"
+import { House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis, TruckElectric } from "lucide-react"
 import type { ComponentType } from "react"
 import Dashboard from "../../views/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
 import CRM from "../../views/home/CRM"
-import Inventory from "../../views/home/Inventory"
+// import Inventory from "../../views/home/Inventory"
 import Warehouse from "../../views/Warehouse"
 import Users from "../../views/users/Users"
 import Permissions from "../../views/users/Permissions"
@@ -39,14 +39,14 @@ export const routesDashboard: RouteConfig[] = [
     icon: House,
     showInSidebar: true,
     subItems: [
-      { // Inventario
-        key: 'inventory',
-        path: '/inventory',
-        name: 'Inventario',
-        icon: Boxes,
-        component: Inventory,
-        showInSidebar: true,
-      },
+      // { // Inventario
+      //   key: 'inventory',
+      //   path: '/inventory',
+      //   name: 'Inventario',
+      //   icon: Boxes,
+      //   component: Inventory,
+      //   showInSidebar: true,
+      // },
       { // Campañas
         key: 'campaigns',
         path: '/campaigns',

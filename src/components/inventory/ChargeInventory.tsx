@@ -1,6 +1,6 @@
 // Vista de carga de inventario mejorada
-import { FileText, UploadCloud } from "lucide-react"
-import { useState } from "react"
+import { AlertTriangle, CheckCircle, FileText, UploadCloud } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller } from "react-hook-form"
 import useMediaQueries from "../../hooks/useMediaQueries"
 import MessageToasty from "../ui/messages/MessageToasty"
@@ -10,16 +10,28 @@ import SelectMultiple from "../ui/select/SelectMultiple"
 import { useSearchParams } from "react-router-dom"
 import { LabelBadge } from "../ui/label/LabelBadge"
 import Form from "../ui/form/Form"
-import { useChargeInventory } from "../../hooks/useInventories"
 import type { InventoryUploadData } from "../../schemas/inventory-schema"
 
 
 interface ChargeInventoryProps {
   onNext?: (formData: InventoryUploadData) => void
   wizardMode?: boolean
+  validateInv: (params: { dataInv: InventoryUploadData, id_be: string }) => void
+  isPendingValidateInv: boolean
+  isSuccessValidateInv: boolean
+  isErrorValidateInv: boolean
+  validationData?: any
 }
 
-const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) => {
+const ChargeInventory = ({
+  onNext,
+  wizardMode = false,
+  validateInv,
+  isPendingValidateInv = false,
+  isSuccessValidateInv = false,
+  isErrorValidateInv = false,
+  validationData = null
+}: ChargeInventoryProps) => {
 
   const [searchParams] = useSearchParams()
   const id_be = searchParams.get('id_be')
@@ -28,23 +40,25 @@ const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) =
 
   // Hook
   const { isDesktop, isMobile } = useMediaQueries()
-  const {
-    loadInventory,
-    isPendingloadInv,
-    isSuccessloadInv,
-    isErrorloadInv,
-  } = useChargeInventory()
 
   // Estados
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [formDataToValidate, setFormDataToValidate] = useState<InventoryUploadData | null>(null)
 
-  const defaultValues: InventoryUploadData = {
+  // const defaultValues: InventoryUploadData = {
+  //   nombre: nombre_almacen ? `Inventario ${nombre_almacen}` : '',
+  //   tipo_inventario: '',
+  //   id_almacen: id_almacen || '',
+  //   region: '',
+  //   archivo: null
+  // }
+  const defaultValues = useMemo(() => ({
     nombre: nombre_almacen ? `Inventario ${nombre_almacen}` : '',
     tipo_inventario: '',
     id_almacen: id_almacen || '',
     region: '',
     archivo: null
-  }
+  }), [nombre_almacen, id_almacen])
 
   // Opciones para radio buttons
   const tipoInventarioOptions: RadioOption<'fisico' | 'virtual'>[] = [
@@ -69,17 +83,15 @@ const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) =
     setValue('archivo', file)
   }
 
-  const createFormDataForAPI = (data: InventoryUploadData): FormData => {
-    const formData = new FormData()
-    formData.append('nombre', data.nombre)
-    formData.append('tipo_inventario', data.tipo_inventario)
-    formData.append('id_almacen', data.id_almacen)
-    formData.append('region', data.region)
-    if (data.archivo) {
-      formData.append('archivo', data.archivo)
+  // Efecto para manejar validación exitosa
+  useEffect(() => {
+    if (isSuccessValidateInv && validationData && formDataToValidate && wizardMode && onNext) {
+      // si la validación fue exitosa, ir al siguiente step
+      if (validationData.valid) {
+        onNext(formDataToValidate)
+      }
     }
-    return formData
-  }
+  }, [isSuccessValidateInv, validationData, formDataToValidate, wizardMode, onNext])
 
   const handleSubmitChargeInv = async (data: InventoryUploadData) => {
     const formData = {
@@ -92,22 +104,106 @@ const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) =
 
     console.log('Datos del formulario:', formData)
 
-    if (wizardMode && onNext) {
-      onNext(formData)
+    if (wizardMode) {
+      // En modo wizard, primero validar
+      setFormDataToValidate(formData)
+      if (id_be) {
+        validateInv({ dataInv: formData, id_be })
+      }
       return
     }
+  }
 
-    const inventoryRequest = {
-      id_be: id_be || '',
-      formData: createFormDataForAPI(data)
+  const renderValidationStatus = () => {
+    if (!wizardMode) return null
+
+    // Mostrar loading cuando está validando
+    if (isPendingValidateInv) {
+      return (
+        <div className="mb-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-sky-600"></div>
+            <div>
+              <h3 className="text-sm font-medium text-sky-800">Validando archivo...</h3>
+              <p className="text-sm text-sky-700">Por favor espera mientras validamos el formato y contenido.</p>
+            </div>
+          </div>
+        </div>
+      )
     }
 
-    await loadInventory(inventoryRequest)
+    // Solo mostrar resultados si hay validationData
+    if (isSuccessValidateInv && validationData) {
+      if (validationData.valid) {
+        return (
+          // <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <div>
+                <h3 className="text-sm font-medium text-green-800">¡Validación exitosa!</h3>
+                <p className="text-sm text-green-700">
+                  Archivo válido con {validationData.metadata?.total_lines || 0} líneas.
+                  {validationData.summary?.total_warnings > 0 &&
+                    ` ${validationData.summary.total_warnings} advertencias encontradas.`
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        )
+      } else {
+        // Verificar que validationData existe antes de acceder a sus propiedades
+        return (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-red-800">Errores en el archivo</h3>
+                <p className="text-sm text-red-700 mb-2">
+                  Se encontraron {validationData?.summary?.total_errors || 0} errores:
+                </p>
+                {validationData?.errors && validationData.errors.length > 0 && (
+                  <ul className="text-xs text-red-600 space-y-1 max-h-32 overflow-y-auto">
+                    {validationData.errors.slice(0, 5).map((error: string, index: number) => (
+                      <li key={index}>• {error}</li>
+                    ))}
+                    {validationData.errors.length > 5 && (
+                      <li>• ... y {validationData.errors.length - 5} errores más</li>
+                    )}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      }
+    }
+
+    // Mostrar error de validación
+    if (isErrorValidateInv) {
+      return (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div>
+              <h3 className="text-sm font-medium text-red-800">Error en validación</h3>
+              <p className="text-sm text-red-700">No se pudo validar el archivo. Inténtalo nuevamente.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return null
   }
 
   const renderChargeInventory = (control: any, errors: any, setValue: any) => {
     return (
       <div className="">
+
+        {/* Estados de validación */}
+        {renderValidationStatus()}
 
         {/* Grid principal */}
         <div className={`grid gap-6 ${isDesktop
@@ -129,7 +225,7 @@ const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) =
 
                 {id_be && (
                   <>
-                    <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-end gap-2">
                       <LabelBadge variant="info" labelText={`BE: ${id_be}`} />
                       <LabelBadge variant="info" labelText={`Almacén: ${nombre_almacen}`} />
                     </div>
@@ -254,11 +350,12 @@ const ChargeInventory = ({ onNext, wizardMode = false }: ChargeInventoryProps) =
       title="carga de inventario"
       icon={UploadCloud}
       item={defaultValues}
+      enabledSection={false}
       defaultValues={defaultValues}
       onSubmit={handleSubmitChargeInv}
-      isLoading={isPendingloadInv}
-      isSuccess={isSuccessloadInv}
-      isError={isErrorloadInv}
+      isLoading={wizardMode ? isPendingValidateInv : false}
+      isSuccess={wizardMode ? false : false}
+      isError={wizardMode ? isErrorValidateInv : false}
       renderFields={renderChargeInventory}
       submitButtonText={{
         create: '', // wizardMode ? 'Siguiente' : 'Cargar almacén',

@@ -293,6 +293,7 @@ const FormDistributors = ({ distributor, closeDrawer }: FormDistributorsProps) =
       title="distribuidor"
       icon={Truck}
       item={distributor ? defaultValues : null}
+      enabledSection
       closeDrawer={closeDrawer}
       defaultValues={defaultValues}
       onSubmit={handleSubmitDistributor}

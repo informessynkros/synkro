@@ -1,16 +1,32 @@
-// Wrapper del wizard para carga de inventario
+// Wrapper del wizard para carga de inventario - CON HOOK CENTRALIZADO
 
 import { useState, useEffect, useRef } from "react"
 import { CheckCircle } from "lucide-react"
 import { gsap } from "gsap"
 import ChargeInventory from "./ChargeInventory"
 import PreviewStep from "./PreviewStep"
+import { useChargeInventory } from "../../hooks/useInventories"
 import type { InventoryUploadData } from "../../schemas/inventory-schema"
-
 
 const InventoryWizard = () => {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [formData, setFormData] = useState<InventoryUploadData | null>(null)
+  const [validationData, setValidationData] = useState<any>(null)
+
+  const {
+    // Para validación
+    validateInv,
+    isPendingValidateInv,
+    isSuccessValidateInv,
+    isErrorValidateInv,
+    validationData: hookValidationData,
+
+    // Para carga final
+    loadInventory,
+    isPendingloadInv,
+    isSuccessloadInv,
+    isErrorloadInv,
+  } = useChargeInventory()
 
   // Refs para animaciones GSAP
   const progressLineRef = useRef<HTMLDivElement>(null)
@@ -28,6 +44,17 @@ const InventoryWizard = () => {
       description: 'Revisar y confirmar'
     }
   ]
+
+  useEffect(() => {
+    if (isSuccessValidateInv && hookValidationData && formData) {
+      // Si la validación fue exitosa, ir al siguiente step
+      if (hookValidationData.valid) {
+        setValidationData(hookValidationData)
+        setCurrentStep(2)
+      }
+      // Si hay errores, quedarse en el step actual
+    }
+  }, [isSuccessValidateInv, hookValidationData, formData])
 
   // Animación cuando cambia el step
   useEffect(() => {
@@ -59,10 +86,8 @@ const InventoryWizard = () => {
 
   }, [currentStep, steps.length])
 
-  // Handlers de navegación
   const handleNext = (data: InventoryUploadData) => {
     setFormData(data)
-    setCurrentStep(2)
   }
 
   const handleBack = () => {
@@ -127,7 +152,7 @@ const InventoryWizard = () => {
                 <div className="relative w-32 h-2 mx-6 bg-gray-200 rounded-full overflow-hidden">
                   <div
                     ref={index === 0 ? progressLineRef : null}
-                    className="absolute top-0 left-0 h-full bg-sky-600 rounded-full transition-all duration-600"
+                    className="absolute top-0 left-0 h-full bg-[#44556F] rounded-full transition-all duration-600"
                     style={{ width: currentStep > step.number ? '100%' : '0%' }}
                   />
                 </div>
@@ -144,6 +169,11 @@ const InventoryWizard = () => {
             <ChargeInventory
               onNext={handleNext}
               wizardMode={true}
+              validateInv={validateInv}
+              isPendingValidateInv={isPendingValidateInv}
+              isSuccessValidateInv={isSuccessValidateInv}
+              isErrorValidateInv={isErrorValidateInv}
+              validationData={hookValidationData}
             />
           </div>
         )}
@@ -152,8 +182,13 @@ const InventoryWizard = () => {
           <div className="animate-fade-in">
             <PreviewStep
               formData={formData}
+              validationData={validationData}
               onBack={handleBack}
               onEdit={handleEdit}
+              loadInventory={loadInventory}
+              isPendingloadInv={isPendingloadInv}
+              isSuccessloadInv={isSuccessloadInv}
+              isErrorloadInv={isErrorloadInv}
             />
           </div>
         )}

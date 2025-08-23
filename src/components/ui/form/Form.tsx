@@ -10,7 +10,7 @@ import ButtonCustomLoading from "../button/ButtonCustomLoading"
 
 interface FormConfigProps<T extends FieldValues> {
   // Configuración básica
-  title: string
+  title?: string
   icon: LucideIcon
   // Props del item (para edición) o null (para creación)
   item?: T | null
@@ -24,6 +24,8 @@ interface FormConfigProps<T extends FieldValues> {
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
+  // Habilitar sección
+  enabledSection?: boolean
   // Render function para los campos del formulario
   renderFields: (control: Control<T>, errors: any, setValue?: any) => ReactNode
   // Configuración de botones (opcional)
@@ -47,6 +49,7 @@ function Form<T extends FieldValues>({
   isLoading,
   isSuccess,
   isError,
+  enabledSection,
   renderFields,
   submitButtonText = {
     create: 'Crear',
@@ -80,6 +83,13 @@ function Form<T extends FieldValues>({
       reset(defaultValues as any)
     }
   }, [item, reset, defaultValues])
+  // useEffect(() => {
+  //   if (item) {
+  //     reset(item as any)
+  //   } else {
+  //     reset(defaultValues as any)
+  //   }
+  // }, [item, reset])
 
   // Cierra el drawer cuando isSuccess es true
   useEffect(() => {
@@ -94,10 +104,12 @@ function Form<T extends FieldValues>({
 
   return (
     <FormProvider {...methods}>
-      <Section
-        text={`${isEditing ? 'Edición' : 'Creación'} de ${title.toLowerCase()}`}
-        icon={icon}
-      />
+      {enabledSection && (
+        <Section
+          text={`${isEditing ? 'Edición' : 'Creación'} de ${title?.toLowerCase()}`}
+          icon={icon}
+        />
+      )}
 
       <div className="shadow-md p-6 rounded-md mt-6 bg-white">
         <form
