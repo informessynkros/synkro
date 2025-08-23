@@ -160,8 +160,8 @@ const PreviewStep = ({
 
     const totalAvailable = validationData.preview?.length || 0
     const rowsToShow = showAllRows ? validationData.preview : validationData.preview.slice(0, 10)
-    // const remainingRows = showAllRows ? 0 : (totalAvailable - 10) // Si está expandido = 0, si no = lo que reste
-    const remainingRows = validationData.metadata?.total_lines - rowsToShow.length
+    const remainingRows = showAllRows ? 0 : (totalAvailable - 10) // Si está expandido = 0, si no = lo que reste
+    // const remainingRows = validationData.metadata?.total_lines - rowsToShow.length
 
     return (
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
@@ -187,7 +187,8 @@ const PreviewStep = ({
               </tr>
             </thead>
             <tbody>
-              {validationData.preview.map((row: any, index: number) => (
+              {/* {validationData.preview.map((row: any, index: number) => ( */}
+              {rowsToShow.map((row: any, index: number) => (
                 <tr
                   key={index}
                   className={`border-b border-gray-100 ${row.valid ? 'bg-white' : 'bg-red-50'}`}
