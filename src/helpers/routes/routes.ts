@@ -1,6 +1,6 @@
 // Rutas
 
-import { House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis, TruckElectric } from "lucide-react"
+import { House, LayoutDashboard, Megaphone, type LucideIcon, Computer, WarehouseIcon, Users2, UsersRoundIcon, ShieldEllipsis, TruckElectric, RadioTower } from "lucide-react"
 import type { ComponentType } from "react"
 import Dashboard from "../../views/Dashboard"
 import Campaigns from "../../views/home/Campaigns"
@@ -11,6 +11,7 @@ import Users from "../../views/users/Users"
 import Permissions from "../../views/users/Permissions"
 import Distributors from "../../views/home/Distributors"
 import InventoryWizard from "../../components/inventory/InventoryWizard"
+import SFTP from "../../views/sftp/SFTP"
 
 // Clase de rutas
 export interface RouteConfig {
@@ -112,5 +113,13 @@ export const routesDashboard: RouteConfig[] = [
         showInSidebar: true,
       },
     ]
+  },
+  { // Conexión SFTP
+    key: 'sftp',
+    path: '/sftp',
+    name: 'SFTP',
+    icon: RadioTower,
+    component: SFTP,
+    showInSidebar: true,
   },
 ]
